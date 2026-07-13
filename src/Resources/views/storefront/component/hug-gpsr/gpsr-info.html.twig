@@ -1,0 +1,43 @@
+{# GPSR-Pflichtangaben (Art. 19 Verordnung (EU) 2023/988): Hersteller mit
+   Postanschrift und elektronischer Adresse, bei Nicht-EU-Herstellern
+   zusätzlich die verantwortliche Person in der EU. Die Angaben müssen direkt
+   auf der Produktdetailseite stehen; die Gestaltung ist frei, darf aber nicht
+   wie ein amtliches EU-Siegel wirken (daher bewusst dezente Box ohne Icons).
+
+   Welche Daten erscheinen (Hersteller-Custom-Fields oder globaler Fallback),
+   entscheidet der GpsrProvider — liefert hug_gpsr_info() null, rendert dieses
+   Template nichts.
+
+   Alle Texte sind Nutzereingaben: |nl2br escapet zuerst und macht dann aus
+   Zeilenumbrüchen <br> — kein |raw.
+
+   Parameter (per sw_include "with"):
+     - hugGpsrManufacturer: Hersteller des Produkts (optional, null erlaubt)
+     - hugGpsrClass:        zusätzliche CSS-Klassen für den Wrapper (optional) #}
+{% set hugGpsrInfo = hug_gpsr_info(context, hugGpsrManufacturer|default(null)) %}
+{% if hugGpsrInfo %}
+    {% if (config('HugEuLabel.config.gpsrDisplayMode') ?: 'banner') == 'banner' %}
+        {% set hugGpsrTheme = (config('HugEuLabel.config.gpsrBannerTheme') ?: 'neutral_grey')|replace({'_': '-'}) %}
+        {% set hugGpsrWrapperClass = 'hug-gpsr hug-gpsr-banner hug-gpsr-banner--' ~ hugGpsrTheme %}
+    {% else %}
+        {% set hugGpsrWrapperClass = 'hug-gpsr hug-gpsr--plain' %}
+    {% endif %}
+    {% set hugGpsrMaxWidth = config('HugEuLabel.config.gpsrMaxWidth') %}
+    {% set hugGpsrFontSize = config('HugEuLabel.config.gpsrFontSize') %}
+    {% set hugGpsrStyle = (hugGpsrMaxWidth > 0 ? 'max-width: ' ~ hugGpsrMaxWidth ~ 'px;' : '')
+        ~ (hugGpsrFontSize > 0 ? ' font-size: ' ~ hugGpsrFontSize ~ 'px;' : '') %}
+    <div class="{{ hugGpsrWrapperClass }}{% if hugGpsrClass is defined and hugGpsrClass %} {{ hugGpsrClass }}{% endif %}"{% if hugGpsrStyle|trim %} style="{{ hugGpsrStyle|trim }}"{% endif %}>
+        <p class="hug-gpsr-headline">
+            {%- if config('HugEuLabel.config.gpsrHeadline') -%}
+                {{ config('HugEuLabel.config.gpsrHeadline') }}
+            {%- else -%}
+                {{ 'hugEuLabel.gpsr.headline'|trans|sw_sanitize }}
+            {%- endif -%}
+        </p>
+        <p class="hug-gpsr-text">{{ hugGpsrInfo.text|nl2br }}</p>
+        {% if hugGpsrInfo.responsiblePerson %}
+            <p class="hug-gpsr-subheadline">{{ 'hugEuLabel.gpsr.responsiblePerson'|trans|sw_sanitize }}</p>
+            <p class="hug-gpsr-text">{{ hugGpsrInfo.responsiblePerson|nl2br }}</p>
+        {% endif %}
+    </div>
+{% endif %}

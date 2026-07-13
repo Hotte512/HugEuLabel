@@ -1,0 +1,21 @@
+{
+    "hugEuLabel": {
+        "label": {
+            "alt": "EU-Gewährleistungslabel: Hinweis auf die gesetzliche Gewährleistung von mindestens zwei Jahren",
+            "showFull": "Gewährleistungslabel anzeigen",
+            "hideFull": "Gewährleistungslabel ausblenden",
+            "modalTitle": "EU-Gewährleistungslabel – harmonisierte Mitteilung über das gesetzliche Gewährleistungsrecht",
+            "close": "Schließen"
+        },
+        "gpsr": {
+            "headline": "Herstellerinformationen gemäß Produktsicherheitsverordnung (GPSR)",
+            "responsiblePerson": "Verantwortliche Person in der EU"
+        },
+        "garan": {
+            "showFull": "Garantielabel anzeigen",
+            "hideFull": "Garantielabel ausblenden",
+            "conditionsLink": "Vollständige Garantiebedingungen anzeigen",
+            "alt": "GARAN-Garantielabel: gewerbliche Haltbarkeitsgarantie des Herstellers"
+        }
+    }
+}

@@ -1,0 +1,16 @@
+parameters:
+    level: max
+
+    paths:
+        - src/
+        - tests/
+
+    excludePaths:
+        - src/Resources/
+
+    bootstrapFiles:
+        - tests/bootstrap.php
+
+    # Treat @param/@return PHPDoc types as guidance only; do not silently widen
+    # inferred types based on doc blocks.
+    treatPhpDocTypesAsCertain: false

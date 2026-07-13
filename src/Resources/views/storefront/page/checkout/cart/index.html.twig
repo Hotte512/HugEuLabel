@@ -1,0 +1,15 @@
+{% sw_extends '@Storefront/storefront/page/checkout/cart/index.html.twig' %}
+
+{# Warenkorb-Seite: Label direkt unter der Positions-Tabelle, eager geladen. #}
+{% block page_checkout_cart_product_table %}
+    {{ parent() }}
+
+    {% set hugEuLabelCartMode = config('HugEuLabel.config.cartMode') ?: 'hidden' %}
+    {% if hugEuLabelCartMode != 'hidden' %}
+        {% sw_include '@HugEuLabel/storefront/component/hug-eu-label/label.html.twig' with {
+            hugEuLabelMode: hugEuLabelCartMode,
+            hugEuLabelSurface: 'cart',
+            hugEuLabelClass: 'hug-eu-label-cart mt-3'
+        } %}
+    {% endif %}
+{% endblock %}

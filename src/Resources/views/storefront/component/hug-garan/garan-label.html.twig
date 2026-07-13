@@ -1,0 +1,82 @@
+{# GARAN-Garantielabel (DVO (EU) 2025/1960, Anhang II), serverseitig aus der
+   offiziellen Vorlage befüllt (Marke, Modell-Kennung, Dauer, QR-Code).
+
+   Das volle Label (~280 KB SVG) wird als <img> über die Label-Route geladen
+   (browser-cachebar, hält die Seite leicht); nur der kompakte Nested-Banner
+   (8 KB) liegt inline im HTML.
+
+   Parameter (per sw_include "with"):
+     - hugGaranProduct:     ProductEntity (Pflicht; Hersteller sollte geladen sein)
+     - hugGaranMode:        'full' | 'nested' (Pflicht)
+     - hugGaranSurface:     'pdp' | 'confirm' | 'listing' (Pflicht, für eindeutige IDs)
+     - hugGaranCollapsible: true = Nested-Banner klappt das volle Label auf
+                            (nur PDP; Checkout/Listing zeigen nur den Banner)
+
+   Rendert nichts, wenn garanEnabled aus ist oder das Produkt keine
+   anzeigepflichtige Garantie hat. #}
+{% if config('HugEuLabel.config.garanEnabled') %}
+    {% set hugGaranConditionsUrl = hug_garan_conditions_url(hugGaranProduct, context) %}
+    {% set hugGaranNestedWidth = config('HugEuLabel.config.garanNestedWidth') %}
+    {% set hugGaranNestedWidth = hugGaranNestedWidth > 0 ? hugGaranNestedWidth : 368 %}
+    {% set hugGaranFullUrl = path('frontend.hug_garan.label', { productId: hugGaranProduct.id, variant: 'full' }) %}
+    {% if hugGaranMode == 'nested' %}
+        {% set hugGaranNestedSvg = hug_garan_label(hugGaranProduct, 'nested', context) %}
+        {% if hugGaranNestedSvg %}
+            <div class="hug-garan-label hug-garan-label-{{ hugGaranSurface }}">
+                {% if hugGaranCollapsible|default(false) %}
+                    {% set hugGaranTargetId = 'hug-garan-full-' ~ hugGaranSurface ~ '-' ~ hugGaranProduct.id %}
+                    <button type="button"
+                            class="hug-garan-nested-banner border-0 p-0 d-block bg-transparent"
+                            style="max-width: {{ hugGaranNestedWidth }}px"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#{{ hugGaranTargetId }}"
+                            aria-expanded="false"
+                            aria-controls="{{ hugGaranTargetId }}"
+                            aria-label="{{ 'hugEuLabel.garan.showFull'|trans|striptags }}">
+                        {{ hugGaranNestedSvg|raw }}
+                    </button>
+                    <div class="collapse" id="{{ hugGaranTargetId }}">
+                        <button type="button"
+                                class="hug-garan-full border-0 p-0 d-block bg-transparent"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#{{ hugGaranTargetId }}"
+                                aria-expanded="true"
+                                aria-controls="{{ hugGaranTargetId }}"
+                                aria-label="{{ 'hugEuLabel.garan.hideFull'|trans|striptags }}">
+                            <img src="{{ hugGaranFullUrl }}"
+                                 alt="{{ 'hugEuLabel.garan.alt'|trans|striptags }}"
+                                 loading="lazy">
+                        </button>
+                    </div>
+                {% else %}
+                    <div class="hug-garan-nested-banner" style="max-width: {{ hugGaranNestedWidth }}px">
+                        {{ hugGaranNestedSvg|raw }}
+                    </div>
+                {% endif %}
+                {% if hugGaranConditionsUrl %}
+                    <a class="hug-garan-conditions-link d-block small"
+                       href="{{ hugGaranConditionsUrl }}" target="_blank" rel="noopener">
+                        {{ 'hugEuLabel.garan.conditionsLink'|trans|sw_sanitize }}
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        {# Existenz-Check serverseitig über den Resolver (conditionsUrl ist
+           genau dann gesetzt, wenn ein Label anzuzeigen ist). #}
+        {% if hugGaranConditionsUrl %}
+            {% set hugGaranMaxWidth = config('HugEuLabel.config.maxWidth') %}
+            <div class="hug-garan-label hug-garan-label-{{ hugGaranSurface }}">
+                <div class="hug-garan-full" style="max-width: {{ hugGaranMaxWidth > 0 ? hugGaranMaxWidth : 300 }}px">
+                    <img src="{{ hugGaranFullUrl }}"
+                         alt="{{ 'hugEuLabel.garan.alt'|trans|striptags }}"
+                         loading="{{ hugGaranSurface == 'pdp' ? 'eager' : 'lazy' }}">
+                </div>
+                <a class="hug-garan-conditions-link d-block small"
+                   href="{{ hugGaranConditionsUrl }}" target="_blank" rel="noopener">
+                    {{ 'hugEuLabel.garan.conditionsLink'|trans|sw_sanitize }}
+                </a>
+            </div>
+        {% endif %}
+    {% endif %}
+{% endif %}

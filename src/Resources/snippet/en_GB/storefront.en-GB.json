@@ -1,0 +1,21 @@
+{
+    "hugEuLabel": {
+        "label": {
+            "alt": "EU warranty label: notice of the statutory legal guarantee of at least two years",
+            "showFull": "Show warranty label",
+            "hideFull": "Hide warranty label",
+            "modalTitle": "EU warranty label – harmonised notice on the legal guarantee of conformity",
+            "close": "Close"
+        },
+        "gpsr": {
+            "headline": "Manufacturer information according to the General Product Safety Regulation (GPSR)",
+            "responsiblePerson": "Responsible person in the EU"
+        },
+        "garan": {
+            "showFull": "Show guarantee label",
+            "hideFull": "Hide guarantee label",
+            "conditionsLink": "Show full guarantee conditions",
+            "alt": "GARAN guarantee label: commercial durability guarantee of the producer"
+        }
+    }
+}

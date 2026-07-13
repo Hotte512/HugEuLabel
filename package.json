@@ -1,0 +1,24 @@
+{
+    "name": "hug-eu-label",
+    "version": "0.1.0",
+    "description": "Admin tooling workspace for HugEuLabel (lint + unit tests)",
+    "private": true,
+    "scripts": {
+        "lint": "eslint --ext .js",
+        "lint:js": "eslint --ext .js src/Resources/app tests",
+        "lint:fix": "eslint --ext .js --fix",
+        "unit": "jest --config jest.config.js"
+    },
+    "_comment": "Tooling packages live in `dependencies` on purpose: bin/build-administration.sh runs `npm ci --omit=dev` in plugin roots and would wipe devDependencies (and with them jest/eslint) on every admin build.",
+    "dependencies": {
+        "@babel/core": "^7.24.0",
+        "@babel/preset-env": "^7.24.0",
+        "@vue/test-utils": "^2.4.6",
+        "babel-jest": "^29.7.0",
+        "eslint": "^8.57.0",
+        "eslint-plugin-vue": "^9.26.0",
+        "jest": "^29.7.0",
+        "jest-environment-jsdom": "^29.7.0",
+        "vue": "^3.5.0"
+    }
+}

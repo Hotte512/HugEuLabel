@@ -1,0 +1,15 @@
+{% sw_extends '@Storefront/storefront/component/checkout/offcanvas-cart.html.twig' %}
+
+{# Offcanvas-Warenkorb: Label direkt über der Summenbox, eager geladen. #}
+{% block component_offcanvas_summary %}
+    {% set hugEuLabelOffcanvasMode = config('HugEuLabel.config.offcanvasMode') ?: 'hidden' %}
+    {% if hugEuLabelOffcanvasMode != 'hidden' %}
+        {% sw_include '@HugEuLabel/storefront/component/hug-eu-label/label.html.twig' with {
+            hugEuLabelMode: hugEuLabelOffcanvasMode,
+            hugEuLabelSurface: 'offcanvas',
+            hugEuLabelClass: 'hug-eu-label-offcanvas mb-3'
+        } %}
+    {% endif %}
+
+    {{ parent() }}
+{% endblock %}

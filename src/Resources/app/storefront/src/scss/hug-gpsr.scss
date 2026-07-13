@@ -1,0 +1,128 @@
+/*
+ * GPSR-Pflichtangaben-Block: dezente Text-/Banner-Darstellung für die nach
+ * der EU-Produktsicherheitsverordnung (GPSR) geforderten Herstellerangaben.
+ * Die Box hat bewusst KEINEN Alert-/Warncharakter — nur ein schmaler
+ * linker Farbbalken plus zarte Hintergrundfläche. Alle Farben laufen über
+ * die Custom Properties --hug-gpsr-bg / --hug-gpsr-border / --hug-gpsr-bar /
+ * --hug-gpsr-color, die je Theme-Modifier (.hug-gpsr-banner--*) überschrieben
+ * werden — so bleibt der Block frei themebar, ohne Sass-Variablen anzufassen.
+ *
+ * Der Positions-Slot (.hug-position-slot) ordnet EU-Label und GPSR-Block
+ * gemeinsam an — entweder gestapelt (Default) oder nebeneinander
+ * (--side-by-side, mit Umbruch auf Mobile).
+ */
+.hug-gpsr {
+    // Basisgröße; per Config (gpsrFontSize) als Inline-Style übersteuerbar —
+    // die Kind-Elemente sind in em gesetzt und skalieren mit.
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--hug-gpsr-color, var(--bs-body-color, #212529));
+}
+
+.hug-gpsr-headline {
+    margin-bottom: 0.25rem;
+    font-size: 1em;
+    font-weight: 600;
+}
+
+.hug-gpsr-subheadline {
+    margin-top: 0.5rem;
+    margin-bottom: 0.25rem;
+    font-size: 1em;
+    font-weight: 600;
+}
+
+.hug-gpsr-text {
+    margin-bottom: 0.5rem;
+    font-size: 1em;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+// Reiner Textblock ohne Rahmen und Hintergrund
+.hug-gpsr--plain {
+    background: none;
+    border: 0;
+}
+
+// Dezente Box mit schmalem linkem Farbbalken
+.hug-gpsr-banner {
+    padding: 0.75rem 1rem;
+    background-color: var(--hug-gpsr-bg, transparent);
+    border: 1px solid transparent;
+    border-left: 4px solid var(--hug-gpsr-bar, transparent);
+    border-radius: 0.375rem;
+}
+
+.hug-gpsr-banner--neutral-grey {
+    --hug-gpsr-bg: #f4f5f6;
+    --hug-gpsr-bar: #8a9199;
+}
+
+// Bewusst deutlich anders als das kräftige EU-Label-Blau (#004494) —
+// keine Verwechslungsgefahr zwischen GPSR-Hinweis und EU-Label.
+.hug-gpsr-banner--soft-blue {
+    --hug-gpsr-bg: #eef4f9;
+    --hug-gpsr-bar: #5b87a8;
+}
+
+.hug-gpsr-banner--soft-green {
+    --hug-gpsr-bg: #eff6ef;
+    --hug-gpsr-bar: #6c9a6c;
+}
+
+// Nur feiner Rahmen rundum, kein Hintergrund, kein dicker Balken
+.hug-gpsr-banner--outline {
+    --hug-gpsr-bg: transparent;
+
+    border: 1px solid #d0d3d7;
+    border-left: 1px solid #d0d3d7;
+}
+
+.hug-gpsr-banner--accent {
+    --hug-gpsr-bg: #f8f9fa;
+    --hug-gpsr-bar: var(--bs-primary, #0d6efd);
+}
+
+// Gemeinsamer Positions-Slot für EU-Label + GPSR-Block
+.hug-position-slot {
+    > * + * {
+        margin-top: 1rem;
+    }
+
+    &.hug-position-slot--side-by-side {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 1rem;
+
+        > * + * {
+            margin-top: 0;
+        }
+
+        > .hug-eu-label,
+        > .hug-garan-label {
+            flex: 0 0 auto;
+        }
+
+        // Basis klein genug, dass der GPSR-Block auch neben ZWEI Labels
+        // (EU 300px + GARAN 368px) noch in die Zeile passt; er wächst
+        // dann auf den Restplatz.
+        > .hug-gpsr {
+            flex: 1 1 12rem;
+            min-width: 0;
+        }
+
+        @media (max-width: 767.98px) {
+            flex-direction: column;
+
+            // In Spaltenrichtung würde die flex-basis (20rem) sonst zur
+            // Mindest-HÖHE des GPSR-Blocks.
+            > .hug-gpsr {
+                flex-basis: auto;
+            }
+        }
+    }
+}

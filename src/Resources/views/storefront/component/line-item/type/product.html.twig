@@ -1,0 +1,24 @@
+{% sw_extends '@Storefront/storefront/component/line-item/type/product.html.twig' %}
+
+{# GARAN-Label an den Bestellpositionen der Bestellabschluss-Seite: kompakte
+   Nested-Variante (nicht aufklappbar — der Platz in der Positions-Zeile ist
+   knapp; die Details stehen hinter dem Bedingungs-Link und auf der PDP).
+   Bewusst auf die Confirm-Route begrenzt: dieselbe Komponente rendert auch
+   Warenkorb, Offcanvas und Bestell-Historie. #}
+{% block component_line_item_type_product_details %}
+    {{ parent() }}
+
+    {% if config('HugEuLabel.config.garanEnabled')
+        and (config('HugEuLabel.config.garanConfirmMode') ?: 'nested') == 'nested'
+        and app.request.attributes.get('_route') == 'frontend.checkout.confirm.page' %}
+        {% set hugGaranLineItemProduct = hug_garan_line_item_product(lineItem, context) %}
+        {% if hugGaranLineItemProduct %}
+            {% sw_include '@HugEuLabel/storefront/component/hug-garan/garan-label.html.twig' with {
+                hugGaranProduct: hugGaranLineItemProduct,
+                hugGaranMode: 'nested',
+                hugGaranSurface: 'confirm',
+                hugGaranCollapsible: false
+            } %}
+        {% endif %}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,776 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+
+    <card>
+        <title lang="de-DE">Allgemein</title>
+        <title lang="en-GB">General</title>
+
+        <input-field type="bool">
+            <name>active</name>
+            <label lang="de-DE">EU-Gewährleistungslabel aktiv</label>
+            <label lang="en-GB">EU warranty label active</label>
+            <helpText lang="de-DE">Schaltet die Funktionen des EU-Gewährleistungslabels ein oder aus (Storefront und E-Mail-Anhang). Die GPSR-Herstellerangaben werden unabhängig davon über die eigene Karte gesteuert.</helpText>
+            <helpText lang="en-GB">Enables or disables the EU warranty label features (storefront and e-mail attachment). The GPSR manufacturer information is controlled independently via its own card.</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+
+        <input-field type="int">
+            <name>maxWidth</name>
+            <label lang="de-DE">Maximale Breite des Labels (px)</label>
+            <label lang="en-GB">Maximum label width (px)</label>
+            <helpText lang="de-DE">Maximale Darstellungsbreite des Gewährleistungslabels in der Storefront in Pixeln. Das Label wird nur proportional skaliert.</helpText>
+            <helpText lang="en-GB">Maximum display width of the warranty label in the storefront in pixels. The label is only scaled proportionally.</helpText>
+            <defaultValue>300</defaultValue>
+        </input-field>
+
+        <input-field type="int">
+            <name>compactWidth</name>
+            <label lang="de-DE">Breite des zugeklappten Kompakt-Banners (px)</label>
+            <label lang="en-GB">Width of the collapsed compact banner (px)</label>
+            <helpText lang="de-DE">Breite des Label-Kopf-Banners in der Kompakt-Darstellung des Gewährleistungslabels.</helpText>
+            <helpText lang="en-GB">Width of the label header banner in the warranty label's compact display.</helpText>
+            <defaultValue>300</defaultValue>
+        </input-field>
+
+        <input-field type="single-select">
+            <name>slotLayout</name>
+            <label lang="de-DE">Anordnung mehrerer Blöcke an derselben Position</label>
+            <label lang="en-GB">Arrangement of multiple blocks at the same position</label>
+            <helpText lang="de-DE">Gilt, wenn mehrere Blöcke (Gewährleistungslabel, GARAN-Label, GPSR-Angaben) am selben Anker stehen: untereinander oder nebeneinander. Reihenfolge: Gewährleistung, GARAN, GPSR. Hinweis: Nebeneinander braucht einen breiten Anker (z. B. „Am Seitenende") — in schmalen Bereichen wie der Kaufbox-Spalte des Desktop-Layouts bricht es mangels Platz automatisch untereinander um.</helpText>
+            <helpText lang="en-GB">Applies when multiple blocks (warranty label, GARAN label, GPSR information) share the same anchor: stacked or side by side. Order: warranty, GARAN, GPSR. Note: side by side needs a wide anchor (e.g. "At the end of the page") — in narrow areas such as the desktop layout's buy-box column it automatically wraps to stacked for lack of space.</helpText>
+            <defaultValue>stacked</defaultValue>
+            <options>
+                <option>
+                    <id>stacked</id>
+                    <name lang="de-DE">Untereinander</name>
+                    <name lang="en-GB">Stacked</name>
+                </option>
+                <option>
+                    <id>side_by_side</id>
+                    <name lang="de-DE">Nebeneinander</name>
+                    <name lang="en-GB">Side by side</name>
+                </option>
+            </options>
+        </input-field>
+
+        <input-field type="single-select">
+            <name>compactBehavior</name>
+            <label lang="de-DE">Kompakt-Darstellung: Verhalten beim Öffnen</label>
+            <label lang="en-GB">Compact display: opening behaviour</label>
+            <helpText lang="de-DE">Gilt überall, wo „Kompakt" gewählt ist: Das volle Label klappt entweder direkt unter dem Banner auf oder öffnet sich in einem Modal-Dialog.</helpText>
+            <helpText lang="en-GB">Applies wherever "compact" is selected: the full label either expands directly below the banner or opens in a modal dialog.</helpText>
+            <defaultValue>collapse</defaultValue>
+            <options>
+                <option>
+                    <id>collapse</id>
+                    <name lang="de-DE">Aufklappen (inline)</name>
+                    <name lang="en-GB">Expand (inline)</name>
+                </option>
+                <option>
+                    <id>modal</id>
+                    <name lang="de-DE">Modal-Dialog</name>
+                    <name lang="en-GB">Modal dialog</name>
+                </option>
+            </options>
+        </input-field>
+    </card>
+
+    <card>
+        <title lang="de-DE">Produktdetailseite</title>
+        <title lang="en-GB">Product detail page</title>
+
+        <input-field type="single-select">
+            <name>pdpMode</name>
+            <label lang="de-DE">Darstellung auf der Produktdetailseite</label>
+            <label lang="en-GB">Display on the product detail page</label>
+            <helpText lang="de-DE">Ab 27.09.2026 verpflichtend: Das Label muss vor Vertragsabschluss vollständig, unmittelbar sichtbar und farbig dargestellt werden. Die Kompakt-Darstellung erfüllt das nach herrschender Lesart nicht und erfolgt auf eigenes Risiko.</helpText>
+            <helpText lang="en-GB">Mandatory from 27/09/2026: the label must be displayed completely, immediately visible and in colour before the contract is concluded. According to the prevailing interpretation the compact display does not fulfil this and is used at your own risk.</helpText>
+            <defaultValue>full</defaultValue>
+            <options>
+                <option>
+                    <id>hidden</id>
+                    <name lang="de-DE">Aus</name>
+                    <name lang="en-GB">Off</name>
+                </option>
+                <option>
+                    <id>full</id>
+                    <name lang="de-DE">Volles Label (rechtssicher)</name>
+                    <name lang="en-GB">Full label (legally safe)</name>
+                </option>
+                <option>
+                    <id>compact</id>
+                    <name lang="de-DE">Kompakt — Label-Kopf, Öffnen per Klick (eigenes Risiko)</name>
+                    <name lang="en-GB">Compact — label header, opens on click (own risk)</name>
+                </option>
+            </options>
+        </input-field>
+
+        <input-field type="single-select">
+            <name>pdpPosition</name>
+            <label lang="de-DE">Position auf der Produktdetailseite</label>
+            <label lang="en-GB">Position on the product detail page</label>
+            <helpText lang="de-DE">Rechtlicher Hinweis: Das Label muss vollständig, unmittelbar sichtbar und farbig dargestellt werden. Die Position „Bei den Versandinformationen" setzt die Standard-Versandinfo-Komponente von Shopware voraus — stark angepasste Themes rendern sie teilweise nicht; nutzen Sie dort „Benutzerdefiniert (CSS-Selektor)".</helpText>
+            <helpText lang="en-GB">Legal note: the label must be displayed completely, immediately visible and in colour. The position "Next to the shipping information" requires Shopware's standard delivery-information component — heavily customised themes may not render it; use "Custom (CSS selector)" there instead.</helpText>
+            <defaultValue>below_buy_button</defaultValue>
+            <options>
+                <option>
+                    <id>above_buy_button</id>
+                    <name lang="de-DE">Über dem Kaufen-Button</name>
+                    <name lang="en-GB">Above the buy button</name>
+                </option>
+                <option>
+                    <id>below_buy_button</id>
+                    <name lang="de-DE">Unter dem Kaufen-Button</name>
+                    <name lang="en-GB">Below the buy button</name>
+                </option>
+                <option>
+                    <id>below_description</id>
+                    <name lang="de-DE">Unter der Produktbeschreibung</name>
+                    <name lang="en-GB">Below the product description</name>
+                </option>
+                <option>
+                    <id>tab_description_end</id>
+                    <name lang="de-DE">Am Ende des Beschreibungs-Tabs</name>
+                    <name lang="en-GB">At the end of the description tab</name>
+                </option>
+                <option>
+                    <id>near_shipping_info</id>
+                    <name lang="de-DE">Bei den Versandinformationen</name>
+                    <name lang="en-GB">Next to the shipping information</name>
+                </option>
+                <option>
+                    <id>page_end</id>
+                    <name lang="de-DE">Am Seitenende</name>
+                    <name lang="en-GB">At the end of the page</name>
+                </option>
+                <option>
+                    <id>custom_selector</id>
+                    <name lang="de-DE">Benutzerdefiniert (CSS-Selektor)</name>
+                    <name lang="en-GB">Custom (CSS selector)</name>
+                </option>
+            </options>
+        </input-field>
+
+        <input-field type="text">
+            <name>pdpCustomSelector</name>
+            <label lang="de-DE">Benutzerdefinierte Position: CSS-Selektor (PDP)</label>
+            <label lang="en-GB">Custom position: CSS selector (PDP)</label>
+            <helpText lang="de-DE">Nur wirksam bei Position „Benutzerdefiniert". Beispiel: .product-detail-price-container. Das Ziel-Element muss beim Seitenaufbau vorhanden sein (per JavaScript nachgeladene Bereiche werden nicht gefunden). Wird das Element nicht gefunden oder ist das Feld leer, wird das Label nicht angezeigt (Warnung in der Browser-Konsole).</helpText>
+            <helpText lang="en-GB">Only effective with position "Custom". Example: .product-detail-price-container. The target element must be present during initial page load (areas loaded later via JavaScript are not found). If the element is not found or the field is empty, the label is not displayed (warning in the browser console).</helpText>
+        </input-field>
+
+        <input-field type="single-select">
+            <name>pdpCustomInsert</name>
+            <label lang="de-DE">Benutzerdefinierte Position: Einfügemodus (PDP)</label>
+            <label lang="en-GB">Custom position: insert mode (PDP)</label>
+            <defaultValue>after</defaultValue>
+            <options>
+                <option>
+                    <id>before</id>
+                    <name lang="de-DE">Vor dem Element</name>
+                    <name lang="en-GB">Before the element</name>
+                </option>
+                <option>
+                    <id>after</id>
+                    <name lang="de-DE">Nach dem Element</name>
+                    <name lang="en-GB">After the element</name>
+                </option>
+                <option>
+                    <id>append</id>
+                    <name lang="de-DE">In das Element (ans Ende)</name>
+                    <name lang="en-GB">Into the element (at the end)</name>
+                </option>
+            </options>
+        </input-field>
+    </card>
+
+    <card>
+        <title lang="de-DE">Warenkorb &amp; Checkout</title>
+        <title lang="en-GB">Cart &amp; checkout</title>
+
+        <input-field type="single-select">
+            <name>checkoutConfirmMode</name>
+            <label lang="de-DE">Darstellung auf der Bestellabschluss-Seite</label>
+            <label lang="en-GB">Display on the checkout confirm page</label>
+            <helpText lang="de-DE">Ab 27.09.2026 verpflichtend: Das Label muss vor Vertragsabschluss vollständig, unmittelbar sichtbar und farbig dargestellt werden. Die Kompakt-Darstellung erfüllt das nach herrschender Lesart nicht und erfolgt auf eigenes Risiko.</helpText>
+            <helpText lang="en-GB">Mandatory from 27/09/2026: the label must be displayed completely, immediately visible and in colour before the contract is concluded. According to the prevailing interpretation the compact display does not fulfil this and is used at your own risk.</helpText>
+            <defaultValue>full</defaultValue>
+            <options>
+                <option>
+                    <id>hidden</id>
+                    <name lang="de-DE">Aus</name>
+                    <name lang="en-GB">Off</name>
+                </option>
+                <option>
+                    <id>full</id>
+                    <name lang="de-DE">Volles Label (rechtssicher)</name>
+                    <name lang="en-GB">Full label (legally safe)</name>
+                </option>
+                <option>
+                    <id>compact</id>
+                    <name lang="de-DE">Kompakt — Label-Kopf, Öffnen per Klick (eigenes Risiko)</name>
+                    <name lang="en-GB">Compact — label header, opens on click (own risk)</name>
+                </option>
+            </options>
+        </input-field>
+
+        <input-field type="single-select">
+            <name>checkoutConfirmPosition</name>
+            <label lang="de-DE">Position auf der Bestellabschluss-Seite</label>
+            <label lang="en-GB">Position on the checkout confirm page</label>
+            <defaultValue>above_terms</defaultValue>
+            <options>
+                <option>
+                    <id>above_terms</id>
+                    <name lang="de-DE">Über den AGB / Widerrufshinweisen</name>
+                    <name lang="en-GB">Above the terms and conditions</name>
+                </option>
+                <option>
+                    <id>below_summary</id>
+                    <name lang="de-DE">Unter der Bestellübersicht</name>
+                    <name lang="en-GB">Below the order summary</name>
+                </option>
+                <option>
+                    <id>below_line_items</id>
+                    <name lang="de-DE">Unter den Bestellpositionen</name>
+                    <name lang="en-GB">Below the line items</name>
+                </option>
+                <option>
+                    <id>above_submit</id>
+                    <name lang="de-DE">Über dem „Zahlungspflichtig bestellen"-Button</name>
+                    <name lang="en-GB">Above the place-order button</name>
+                </option>
+                <option>
+                    <id>custom_selector</id>
+                    <name lang="de-DE">Benutzerdefiniert (CSS-Selektor)</name>
+                    <name lang="en-GB">Custom (CSS selector)</name>
+                </option>
+            </options>
+        </input-field>
+
+        <input-field type="text">
+            <name>confirmCustomSelector</name>
+            <label lang="de-DE">Benutzerdefinierte Position: CSS-Selektor (Bestellabschluss)</label>
+            <label lang="en-GB">Custom position: CSS selector (checkout confirm)</label>
+            <helpText lang="de-DE">Nur wirksam bei Position „Benutzerdefiniert". Das Ziel-Element muss beim Seitenaufbau vorhanden sein (per JavaScript nachgeladene Bereiche werden nicht gefunden). Wird das Element nicht gefunden oder ist das Feld leer, wird das Label nicht angezeigt (Warnung in der Browser-Konsole).</helpText>
+            <helpText lang="en-GB">Only effective with position "Custom". The target element must be present during initial page load (areas loaded later via JavaScript are not found). If the element is not found or the field is empty, the label is not displayed (warning in the browser console).</helpText>
+        </input-field>
+
+        <input-field type="single-select">
+            <name>confirmCustomInsert</name>
+            <label lang="de-DE">Benutzerdefinierte Position: Einfügemodus (Bestellabschluss)</label>
+            <label lang="en-GB">Custom position: insert mode (checkout confirm)</label>
+            <defaultValue>after</defaultValue>
+            <options>
+                <option>
+                    <id>before</id>
+                    <name lang="de-DE">Vor dem Element</name>
+                    <name lang="en-GB">Before the element</name>
+                </option>
+                <option>
+                    <id>after</id>
+                    <name lang="de-DE">Nach dem Element</name>
+                    <name lang="en-GB">After the element</name>
+                </option>
+                <option>
+                    <id>append</id>
+                    <name lang="de-DE">In das Element (ans Ende)</name>
+                    <name lang="en-GB">Into the element (at the end)</name>
+                </option>
+            </options>
+        </input-field>
+
+        <input-field type="single-select">
+            <name>cartMode</name>
+            <label lang="de-DE">Darstellung auf der Warenkorb-Seite</label>
+            <label lang="en-GB">Display on the cart page</label>
+            <helpText lang="de-DE">Freiwillige Zusatzfläche — die Kompakt-Darstellung ist hier unbedenklich.</helpText>
+            <helpText lang="en-GB">Voluntary additional surface — the compact display is unproblematic here.</helpText>
+            <defaultValue>hidden</defaultValue>
+            <options>
+                <option>
+                    <id>hidden</id>
+                    <name lang="de-DE">Aus</name>
+                    <name lang="en-GB">Off</name>
+                </option>
+                <option>
+                    <id>full</id>
+                    <name lang="de-DE">Volles Label</name>
+                    <name lang="en-GB">Full label</name>
+                </option>
+                <option>
+                    <id>compact</id>
+                    <name lang="de-DE">Kompakt — Label-Kopf, Öffnen per Klick</name>
+                    <name lang="en-GB">Compact — label header, opens on click</name>
+                </option>
+            </options>
+        </input-field>
+
+        <input-field type="single-select">
+            <name>offcanvasMode</name>
+            <label lang="de-DE">Darstellung im Offcanvas-Warenkorb</label>
+            <label lang="en-GB">Display in the off-canvas cart</label>
+            <helpText lang="de-DE">Freiwillige Zusatzfläche — die Kompakt-Darstellung ist hier unbedenklich.</helpText>
+            <helpText lang="en-GB">Voluntary additional surface — the compact display is unproblematic here.</helpText>
+            <defaultValue>hidden</defaultValue>
+            <options>
+                <option>
+                    <id>hidden</id>
+                    <name lang="de-DE">Aus</name>
+                    <name lang="en-GB">Off</name>
+                </option>
+                <option>
+                    <id>full</id>
+                    <name lang="de-DE">Volles Label</name>
+                    <name lang="en-GB">Full label</name>
+                </option>
+                <option>
+                    <id>compact</id>
+                    <name lang="de-DE">Kompakt — Label-Kopf, Öffnen per Klick</name>
+                    <name lang="en-GB">Compact — label header, opens on click</name>
+                </option>
+            </options>
+        </input-field>
+    </card>
+
+    <card>
+        <title lang="de-DE">Bestellbestätigung (E-Mail)</title>
+        <title lang="en-GB">Order confirmation (e-mail)</title>
+
+        <input-field type="single-select">
+            <name>mailMode</name>
+            <label lang="de-DE">Label in der Bestellbestätigungs-Mail</label>
+            <label lang="en-GB">Label in the order confirmation e-mail</label>
+            <helpText lang="de-DE">Rechtlicher Hinweis: Nach dem Kauf muss das Label auf einem dauerhaften Datenträger vorliegen (PDF-Anhang oder eingebettetes Bild). Ein bloßer Link genügt nicht. Bei „Eingebettetes Bild" muss das Mail-Template manuell angepasst werden — siehe README des Plugins.</helpText>
+            <helpText lang="en-GB">Legal note: after the purchase the label must be provided on a durable medium (PDF attachment or embedded image). A mere link is not sufficient. For "embedded image" the mail template must be adjusted manually — see the plugin README.</helpText>
+            <defaultValue>pdf_attachment</defaultValue>
+            <options>
+                <option>
+                    <id>pdf_attachment</id>
+                    <name lang="de-DE">PDF-Anhang (empfohlen)</name>
+                    <name lang="en-GB">PDF attachment (recommended)</name>
+                </option>
+                <option>
+                    <id>inline_image</id>
+                    <name lang="de-DE">Eingebettetes Bild (manuelle Template-Anpassung)</name>
+                    <name lang="en-GB">Embedded image (manual template adjustment)</name>
+                </option>
+                <option>
+                    <id>disabled</id>
+                    <name lang="de-DE">Deaktiviert</name>
+                    <name lang="en-GB">Disabled</name>
+                </option>
+            </options>
+        </input-field>
+    </card>
+
+    <card>
+        <title lang="de-DE">Garantielabel GARAN</title>
+        <title lang="en-GB">Guarantee label GARAN</title>
+
+        <input-field type="bool">
+            <name>garanEnabled</name>
+            <label lang="de-DE">GARAN-Garantielabel aktiv</label>
+            <label lang="en-GB">GARAN guarantee label active</label>
+            <helpText lang="de-DE">Zeigt das GARAN-Label für gewerbliche Haltbarkeitsgarantien (DVO (EU) 2025/1960, Anhang II). Es erscheint nur bei Produkten, deren wirksame Garantiedauer über 2 Jahren liegt und deren Garantiebedingungen gepflegt sind — Datenpflege über die Zusatzfelder am Hersteller (Standard) bzw. am Produkt (Abweichungen). Unvollständige Daten unterdrücken das Label und werden im Log-Channel hug_eu_label vermerkt.</helpText>
+            <helpText lang="en-GB">Shows the GARAN label for commercial durability guarantees (Implementing Regulation (EU) 2025/1960, Annex II). It only appears for products whose effective guarantee duration exceeds 2 years and whose guarantee conditions are maintained — data is maintained via the custom fields on the manufacturer (defaults) or product (overrides). Incomplete data suppresses the label and is noted in the hug_eu_label log channel.</helpText>
+            <defaultValue>false</defaultValue>
+        </input-field>
+
+        <input-field type="single-select">
+            <name>garanPdpMode</name>
+            <label lang="de-DE">Darstellung auf der Produktdetailseite</label>
+            <label lang="en-GB">Display on the product detail page</label>
+            <defaultValue>full</defaultValue>
+            <options>
+                <option>
+                    <id>hidden</id>
+                    <name lang="de-DE">Aus</name>
+                    <name lang="en-GB">Off</name>
+                </option>
+                <option>
+                    <id>full</id>
+                    <name lang="de-DE">Volles Label</name>
+                    <name lang="en-GB">Full label</name>
+                </option>
+                <option>
+                    <id>nested</id>
+                    <name lang="de-DE">Kompakt (offizielle Nested-Variante, aufklappbar)</name>
+                    <name lang="en-GB">Compact (official nested variant, expandable)</name>
+                </option>
+            </options>
+        </input-field>
+
+        <input-field type="int">
+            <name>garanNestedWidth</name>
+            <label lang="de-DE">Breite des Nested-Banners (px)</label>
+            <label lang="en-GB">Width of the nested banner (px)</label>
+            <helpText lang="de-DE">Breite der kompakten Nested-Variante des GARAN-Labels (PDP, Bestellabschluss, Listing).</helpText>
+            <helpText lang="en-GB">Width of the compact nested variant of the GARAN label (PDP, checkout confirm, listing).</helpText>
+            <defaultValue>368</defaultValue>
+        </input-field>
+
+        <input-field type="single-select">
+            <name>garanPdpPosition</name>
+            <label lang="de-DE">Position auf der Produktdetailseite</label>
+            <label lang="en-GB">Position on the product detail page</label>
+            <helpText lang="de-DE">Unabhängig von der Position des Gewährleistungslabels — beide können auch am selben Anker stehen.</helpText>
+            <helpText lang="en-GB">Independent of the warranty label position — both can share the same anchor.</helpText>
+            <defaultValue>below_buy_button</defaultValue>
+            <options>
+                <option>
+                    <id>above_buy_button</id>
+                    <name lang="de-DE">Über dem Kaufen-Button</name>
+                    <name lang="en-GB">Above the buy button</name>
+                </option>
+                <option>
+                    <id>below_buy_button</id>
+                    <name lang="de-DE">Unter dem Kaufen-Button</name>
+                    <name lang="en-GB">Below the buy button</name>
+                </option>
+                <option>
+                    <id>below_description</id>
+                    <name lang="de-DE">Unter der Produktbeschreibung</name>
+                    <name lang="en-GB">Below the product description</name>
+                </option>
+                <option>
+                    <id>tab_description_end</id>
+                    <name lang="de-DE">Am Ende des Beschreibungs-Tabs</name>
+                    <name lang="en-GB">At the end of the description tab</name>
+                </option>
+                <option>
+                    <id>near_shipping_info</id>
+                    <name lang="de-DE">Bei den Versandinformationen</name>
+                    <name lang="en-GB">Next to the shipping information</name>
+                </option>
+                <option>
+                    <id>page_end</id>
+                    <name lang="de-DE">Am Seitenende</name>
+                    <name lang="en-GB">At the end of the page</name>
+                </option>
+                <option>
+                    <id>custom_selector</id>
+                    <name lang="de-DE">Benutzerdefiniert (CSS-Selektor)</name>
+                    <name lang="en-GB">Custom (CSS selector)</name>
+                </option>
+            </options>
+        </input-field>
+
+        <input-field type="text">
+            <name>garanPdpCustomSelector</name>
+            <label lang="de-DE">Benutzerdefinierte Position: CSS-Selektor (GARAN)</label>
+            <label lang="en-GB">Custom position: CSS selector (GARAN)</label>
+            <helpText lang="de-DE">Nur wirksam bei Position „Benutzerdefiniert". Das Ziel-Element muss beim Seitenaufbau vorhanden sein (per JavaScript nachgeladene Bereiche werden nicht gefunden). Wird es nicht gefunden oder ist das Feld leer, wird das Label nicht angezeigt (Warnung in der Browser-Konsole).</helpText>
+            <helpText lang="en-GB">Only effective with position "Custom". The target element must be present during initial page load (areas loaded later via JavaScript are not found). If it is not found or the field is empty, the label is not displayed (warning in the browser console).</helpText>
+        </input-field>
+
+        <input-field type="single-select">
+            <name>garanPdpCustomInsert</name>
+            <label lang="de-DE">Benutzerdefinierte Position: Einfügemodus (GARAN)</label>
+            <label lang="en-GB">Custom position: insert mode (GARAN)</label>
+            <defaultValue>after</defaultValue>
+            <options>
+                <option>
+                    <id>before</id>
+                    <name lang="de-DE">Vor dem Element</name>
+                    <name lang="en-GB">Before the element</name>
+                </option>
+                <option>
+                    <id>after</id>
+                    <name lang="de-DE">Nach dem Element</name>
+                    <name lang="en-GB">After the element</name>
+                </option>
+                <option>
+                    <id>append</id>
+                    <name lang="de-DE">In das Element (ans Ende)</name>
+                    <name lang="en-GB">Into the element (at the end)</name>
+                </option>
+            </options>
+        </input-field>
+
+        <input-field type="single-select">
+            <name>garanConfirmMode</name>
+            <label lang="de-DE">Darstellung auf der Bestellabschluss-Seite</label>
+            <label lang="en-GB">Display on the checkout confirm page</label>
+            <helpText lang="de-DE">Kompakte Nested-Variante an jeder Bestellposition mit Garantie.</helpText>
+            <helpText lang="en-GB">Compact nested variant on each order line item with a guarantee.</helpText>
+            <defaultValue>nested</defaultValue>
+            <options>
+                <option>
+                    <id>hidden</id>
+                    <name lang="de-DE">Aus</name>
+                    <name lang="en-GB">Off</name>
+                </option>
+                <option>
+                    <id>nested</id>
+                    <name lang="de-DE">Kompakt pro Bestellposition</name>
+                    <name lang="en-GB">Compact per line item</name>
+                </option>
+            </options>
+        </input-field>
+
+        <input-field type="single-select">
+            <name>garanListingMode</name>
+            <label lang="de-DE">Darstellung im Listing / auf Kategorieseiten</label>
+            <label lang="en-GB">Display in listing / category pages</label>
+            <defaultValue>hidden</defaultValue>
+            <options>
+                <option>
+                    <id>hidden</id>
+                    <name lang="de-DE">Aus</name>
+                    <name lang="en-GB">Off</name>
+                </option>
+                <option>
+                    <id>nested</id>
+                    <name lang="de-DE">Kompakt in der Produktkachel</name>
+                    <name lang="en-GB">Compact in the product box</name>
+                </option>
+            </options>
+        </input-field>
+
+        <input-field type="single-select">
+            <name>garanModelIdSource</name>
+            <label lang="de-DE">Quelle der Modell-Kennung</label>
+            <label lang="en-GB">Model identifier source</label>
+            <helpText lang="de-DE">Welche Produktangabe als „Model identifier" auf dem Label steht. Ist die Quelle beim Produkt leer, wird die Produktnummer verwendet.</helpText>
+            <helpText lang="en-GB">Which product attribute appears as the "model identifier" on the label. If the source is empty for a product, the product number is used.</helpText>
+            <defaultValue>product_number</defaultValue>
+            <options>
+                <option>
+                    <id>product_number</id>
+                    <name lang="de-DE">Produktnummer</name>
+                    <name lang="en-GB">Product number</name>
+                </option>
+                <option>
+                    <id>manufacturer_number</id>
+                    <name lang="de-DE">Herstellernummer</name>
+                    <name lang="en-GB">Manufacturer number</name>
+                </option>
+                <option>
+                    <id>ean</id>
+                    <name lang="de-DE">EAN</name>
+                    <name lang="en-GB">EAN</name>
+                </option>
+            </options>
+        </input-field>
+
+        <input-field type="single-select">
+            <name>garanMailMode</name>
+            <label lang="de-DE">Garantieunterlagen in der Bestellbestätigungs-Mail</label>
+            <label lang="en-GB">Guarantee documents in the order confirmation e-mail</label>
+            <helpText lang="de-DE">„Bedingungs-PDFs": hängt die als PDF gepflegten Garantiebedingungen der bestellten Produkte an (dedupliziert). „Garantieübersicht": erzeugt ein PDF mit allen Garantien der Bestellung (Produkt, Hersteller, Dauer, Bedingungs-Link). Fehler verhindern nie den Mailversand.</helpText>
+            <helpText lang="en-GB">"Conditions PDFs": attaches the guarantee conditions maintained as PDF for the ordered products (deduplicated). "Guarantee summary": generates a PDF listing all guarantees of the order (product, manufacturer, duration, conditions link). Errors never prevent the mail from being sent.</helpText>
+            <defaultValue>conditions_pdfs</defaultValue>
+            <options>
+                <option>
+                    <id>disabled</id>
+                    <name lang="de-DE">Aus</name>
+                    <name lang="en-GB">Off</name>
+                </option>
+                <option>
+                    <id>conditions_pdfs</id>
+                    <name lang="de-DE">Bedingungs-PDFs anhängen</name>
+                    <name lang="en-GB">Attach conditions PDFs</name>
+                </option>
+                <option>
+                    <id>summary_pdf</id>
+                    <name lang="de-DE">Garantieübersicht (PDF) anhängen</name>
+                    <name lang="en-GB">Attach guarantee summary (PDF)</name>
+                </option>
+                <option>
+                    <id>both</id>
+                    <name lang="de-DE">Beides</name>
+                    <name lang="en-GB">Both</name>
+                </option>
+            </options>
+        </input-field>
+    </card>
+
+    <card>
+        <title lang="de-DE">GPSR-Herstellerangaben</title>
+        <title lang="en-GB">GPSR manufacturer information</title>
+
+        <input-field type="bool">
+            <name>gpsrActive</name>
+            <label lang="de-DE">GPSR-Anzeige aktiv</label>
+            <label lang="en-GB">GPSR display active</label>
+            <helpText lang="de-DE">Zeigt die Pflichtangaben nach Art. 19 der Produktsicherheitsverordnung (EU) 2023/988 auf der Produktdetailseite an (Hersteller, Anschrift, elektronische Adresse, ggf. EU-verantwortliche Person). Wirkt unabhängig vom EU-Gewährleistungslabel-Schalter.</helpText>
+            <helpText lang="en-GB">Displays the mandatory information under Art. 19 of the General Product Safety Regulation (EU) 2023/988 on the product detail page (manufacturer, address, electronic address, EU responsible person if applicable). Works independently of the EU warranty label toggle.</helpText>
+            <defaultValue>false</defaultValue>
+        </input-field>
+
+        <input-field type="single-select">
+            <name>gpsrDisplayMode</name>
+            <label lang="de-DE">Darstellung</label>
+            <label lang="en-GB">Display style</label>
+            <helpText lang="de-DE">„Schlicht" rendert einen einfachen Textblock, „Banner" eine dezente Box mit Farbvariante. Die GPSR macht keine Designvorgabe — die Darstellung darf nur nicht wie ein amtliches EU-Siegel wirken.</helpText>
+            <helpText lang="en-GB">"Plain" renders a simple text block, "banner" a subtle box with a colour variant. The GPSR does not prescribe a design — the display just must not look like an official EU seal.</helpText>
+            <defaultValue>banner</defaultValue>
+            <options>
+                <option>
+                    <id>plain</id>
+                    <name lang="de-DE">Schlicht (Textblock)</name>
+                    <name lang="en-GB">Plain (text block)</name>
+                </option>
+                <option>
+                    <id>banner</id>
+                    <name lang="de-DE">Banner (dezente Box)</name>
+                    <name lang="en-GB">Banner (subtle box)</name>
+                </option>
+            </options>
+        </input-field>
+
+        <input-field type="single-select">
+            <name>gpsrBannerTheme</name>
+            <label lang="de-DE">Banner-Farbvariante</label>
+            <label lang="en-GB">Banner colour variant</label>
+            <helpText lang="de-DE">Nur wirksam bei Darstellung „Banner". Alle Varianten sind über CSS Custom Properties (--hug-gpsr-*) im Theme anpassbar.</helpText>
+            <helpText lang="en-GB">Only effective with the "banner" display style. All variants can be adjusted in the theme via CSS custom properties (--hug-gpsr-*).</helpText>
+            <defaultValue>neutral_grey</defaultValue>
+            <options>
+                <option>
+                    <id>neutral_grey</id>
+                    <name lang="de-DE">Neutrales Grau</name>
+                    <name lang="en-GB">Neutral grey</name>
+                </option>
+                <option>
+                    <id>soft_blue</id>
+                    <name lang="de-DE">Zartes Blau</name>
+                    <name lang="en-GB">Soft blue</name>
+                </option>
+                <option>
+                    <id>soft_green</id>
+                    <name lang="de-DE">Zartes Grün</name>
+                    <name lang="en-GB">Soft green</name>
+                </option>
+                <option>
+                    <id>outline</id>
+                    <name lang="de-DE">Nur Rahmen (ohne Hintergrund)</name>
+                    <name lang="en-GB">Outline only (no background)</name>
+                </option>
+                <option>
+                    <id>accent</id>
+                    <name lang="de-DE">Theme-Akzentfarbe</name>
+                    <name lang="en-GB">Theme accent colour</name>
+                </option>
+            </options>
+        </input-field>
+
+        <input-field type="single-select">
+            <name>gpsrPosition</name>
+            <label lang="de-DE">Position auf der Produktdetailseite</label>
+            <label lang="en-GB">Position on the product detail page</label>
+            <helpText lang="de-DE">„Am EU-Gewährleistungslabel" rendert die GPSR-Angaben an derselben Position wie das EU-Label (auch bei dessen Sonderpositionen wie Seitenende oder CSS-Selektor). Ist das EU-Label ausgeblendet, erscheinen die GPSR-Angaben allein an dessen konfigurierter Position.</helpText>
+            <helpText lang="en-GB">"At the EU warranty label" renders the GPSR information at the same position as the EU label (including its special positions such as page end or CSS selector). If the EU label is hidden, the GPSR information appears alone at its configured position.</helpText>
+            <defaultValue>combined</defaultValue>
+            <options>
+                <option>
+                    <id>combined</id>
+                    <name lang="de-DE">Am EU-Gewährleistungslabel</name>
+                    <name lang="en-GB">At the EU warranty label</name>
+                </option>
+                <option>
+                    <id>above_buy_button</id>
+                    <name lang="de-DE">Über dem Kaufen-Button</name>
+                    <name lang="en-GB">Above the buy button</name>
+                </option>
+                <option>
+                    <id>below_buy_button</id>
+                    <name lang="de-DE">Unter dem Kaufen-Button</name>
+                    <name lang="en-GB">Below the buy button</name>
+                </option>
+                <option>
+                    <id>below_description</id>
+                    <name lang="de-DE">Unter der Produktbeschreibung</name>
+                    <name lang="en-GB">Below the product description</name>
+                </option>
+                <option>
+                    <id>tab_description_end</id>
+                    <name lang="de-DE">Am Ende des Beschreibungs-Tabs</name>
+                    <name lang="en-GB">At the end of the description tab</name>
+                </option>
+                <option>
+                    <id>near_shipping_info</id>
+                    <name lang="de-DE">Bei den Versandinformationen</name>
+                    <name lang="en-GB">Next to the shipping information</name>
+                </option>
+                <option>
+                    <id>page_end</id>
+                    <name lang="de-DE">Am Seitenende</name>
+                    <name lang="en-GB">At the end of the page</name>
+                </option>
+                <option>
+                    <id>custom_selector</id>
+                    <name lang="de-DE">Benutzerdefiniert (CSS-Selektor)</name>
+                    <name lang="en-GB">Custom (CSS selector)</name>
+                </option>
+            </options>
+        </input-field>
+
+        <input-field type="int">
+            <name>gpsrMaxWidth</name>
+            <label lang="de-DE">Maximale Breite der GPSR-Box (px)</label>
+            <label lang="en-GB">Maximum width of the GPSR box (px)</label>
+            <helpText lang="de-DE">Leer oder 0 = automatische Breite (nutzt den verfügbaren Platz). Mit einem Wert lässt sich die Box z. B. auf die Breite der Labels begrenzen.</helpText>
+            <helpText lang="en-GB">Empty or 0 = automatic width (uses the available space). Set a value to limit the box, e.g. to the width of the labels.</helpText>
+        </input-field>
+
+        <input-field type="int">
+            <name>gpsrFontSize</name>
+            <label lang="de-DE">Schriftgröße der GPSR-Angaben (px)</label>
+            <label lang="en-GB">Font size of the GPSR information (px)</label>
+            <helpText lang="de-DE">Leer oder 0 = Standard (14 px). Überschriften und Text skalieren gemeinsam — hilfreich gegen unschöne Zeilenumbrüche bei schmaler Box.</helpText>
+            <helpText lang="en-GB">Empty or 0 = default (14 px). Headlines and text scale together — helpful against awkward line breaks in a narrow box.</helpText>
+        </input-field>
+
+        <input-field type="text">
+            <name>gpsrCustomSelector</name>
+            <label lang="de-DE">Benutzerdefinierte Position: CSS-Selektor (GPSR)</label>
+            <label lang="en-GB">Custom position: CSS selector (GPSR)</label>
+            <helpText lang="de-DE">Nur wirksam bei Position „Benutzerdefiniert". Das Ziel-Element muss beim Seitenaufbau vorhanden sein (per JavaScript nachgeladene Bereiche werden nicht gefunden). Wird es nicht gefunden oder ist das Feld leer, werden die Angaben nicht angezeigt (Warnung in der Browser-Konsole).</helpText>
+            <helpText lang="en-GB">Only effective with position "Custom". The target element must be present during initial page load (areas loaded later via JavaScript are not found). If it is not found or the field is empty, the information is not displayed (warning in the browser console).</helpText>
+        </input-field>
+
+        <input-field type="single-select">
+            <name>gpsrCustomInsert</name>
+            <label lang="de-DE">Benutzerdefinierte Position: Einfügemodus (GPSR)</label>
+            <label lang="en-GB">Custom position: insert mode (GPSR)</label>
+            <defaultValue>after</defaultValue>
+            <options>
+                <option>
+                    <id>before</id>
+                    <name lang="de-DE">Vor dem Element</name>
+                    <name lang="en-GB">Before the element</name>
+                </option>
+                <option>
+                    <id>after</id>
+                    <name lang="de-DE">Nach dem Element</name>
+                    <name lang="en-GB">After the element</name>
+                </option>
+                <option>
+                    <id>append</id>
+                    <name lang="de-DE">In das Element (ans Ende)</name>
+                    <name lang="en-GB">Into the element (at the end)</name>
+                </option>
+            </options>
+        </input-field>
+
+        <input-field type="textarea">
+            <name>gpsrFallbackText</name>
+            <label lang="de-DE">Globaler Fallback-Text</label>
+            <label lang="en-GB">Global fallback text</label>
+            <helpText lang="de-DE">Wird angezeigt, wenn der Hersteller des Produkts keine GPSR-Angaben hat oder das Produkt keinen Hersteller hat — z. B. die eigenen Firmendaten, wenn Sie als Quasi-Hersteller auftreten. Bleibt das Feld leer, wird in diesem Fall NICHTS angezeigt (rechtliches Risiko, siehe README). Zeilenumbrüche bleiben erhalten.</helpText>
+            <helpText lang="en-GB">Displayed when the product's manufacturer has no GPSR data or the product has no manufacturer — e.g. your own company details if you act as quasi-manufacturer. If left empty, NOTHING is displayed in this case (legal risk, see README). Line breaks are preserved.</helpText>
+        </input-field>
+
+        <input-field type="text">
+            <name>gpsrHeadline</name>
+            <label lang="de-DE">Überschrift des GPSR-Blocks</label>
+            <label lang="en-GB">Headline of the GPSR block</label>
+            <helpText lang="de-DE">Leer lassen für den Standardtext „Herstellerinformationen gemäß Produktsicherheitsverordnung (GPSR)" (übersetzbar über die Snippet-Verwaltung, Schlüssel hugEuLabel.gpsr.headline).</helpText>
+            <helpText lang="en-GB">Leave empty for the default text "Manufacturer information according to the General Product Safety Regulation (GPSR)" (translatable via snippet administration, key hugEuLabel.gpsr.headline).</helpText>
+        </input-field>
+
+    </card>
+</config>

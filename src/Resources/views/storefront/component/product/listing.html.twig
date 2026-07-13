@@ -1,0 +1,23 @@
+{% sw_extends '@Storefront/storefront/component/product/listing.html.twig' %}
+
+{# GARAN-Label in der Listing-Spalte (unterhalb der Produktkachel), kompakte
+   Nested-Variante. Standardmäßig aus (garanListingMode).
+
+   Bewusst an element_product_listing_box verankert statt am Preis-Block der
+   Produktkachel: Manche Themes ersetzen box-standard komplett
+   ohne parent()-Aufrufe — dieser Listing-Block hier bleibt dagegen erhalten.
+   Der Resolver lädt den Hersteller nach, falls die Listing-Criteria die
+   Association nicht enthält. #}
+{% block element_product_listing_box %}
+    {{ parent() }}
+
+    {% if config('HugEuLabel.config.garanEnabled')
+        and (config('HugEuLabel.config.garanListingMode') ?: 'hidden') == 'nested' %}
+        {% sw_include '@HugEuLabel/storefront/component/hug-garan/garan-label.html.twig' with {
+            hugGaranProduct: product,
+            hugGaranMode: 'nested',
+            hugGaranSurface: 'listing',
+            hugGaranCollapsible: false
+        } %}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,58 @@
+{
+    "name": "hug/eu-label",
+    "description": "Displays the EU warranty label (Directive (EU) 2024/825, Implementing Regulation (EU) 2025/1960) and the GPSR manufacturer information (Regulation (EU) 2023/988, Art. 19) in the storefront and attaches the label to the order confirmation mail",
+    "version": "1.4.1",
+    "type": "shopware-platform-plugin",
+    "license": "GPL-3.0-or-later",
+    "homepage": "https://github.com/Hotte512/HugEuLabel",
+    "support": {
+        "issues": "https://github.com/Hotte512/HugEuLabel/issues",
+        "source": "https://github.com/Hotte512/HugEuLabel"
+    },
+    "require": {
+        "php": "^8.2",
+        "shopware/core": "~6.7.0",
+        "shopware/administration": "~6.7.0",
+        "shopware/storefront": "~6.7.0",
+        "bacon/bacon-qr-code": "^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5",
+        "phpstan/phpstan": "^1.11",
+        "symplify/easy-coding-standard": "^12.3",
+        "rector/rector": "^1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Hug\\EuLabel\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Hug\\EuLabel\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "shopware-plugin-class": "Hug\\EuLabel\\HugEuLabel",
+        "label": {
+            "de-DE": "Produkt-Compliance: EU-Label, GARAN & GPSR",
+            "en-GB": "Product Compliance: EU Label, GARAN & GPSR"
+        },
+        "description": {
+            "de-DE": "EU-Gewährleistungslabel (Storefront + Mail-Anhang), GARAN-Garantielabel für Haltbarkeitsgarantien und GPSR-Herstellerangaben — konfigurierbar pro Sales Channel.",
+            "en-GB": "EU warranty label (storefront + mail attachment), GARAN guarantee label for durability guarantees and GPSR manufacturer information — configurable per sales channel."
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "symfony/runtime": true
+        }
+    },
+    "scripts": {
+        "ecs": "ecs check",
+        "ecs-fix": "ecs check --fix",
+        "phpstan": "phpstan analyse",
+        "phpunit": "phpunit",
+        "rector": "rector process"
+    }
+}

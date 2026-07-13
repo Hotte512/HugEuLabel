@@ -1,0 +1,14 @@
+{# Reines Label-Bild (EU-Original, unverändert). Parameter:
+     - hugEuLabelPath:      Pfad relativ zu bundles/hugeulabel (Pflicht)
+     - hugEuLabelLazy:      true = loading="lazy"
+     - hugEuLabelFullWidth: true = volle Breite des Containers statt der
+                            konfigurierten maxWidth (für das Modal, wo die
+                            Seiten-Breitenbegrenzung keinen Sinn ergibt) #}
+{% set hugEuLabelMaxWidth = config('HugEuLabel.config.maxWidth') %}
+{# background-color: Das EU-Original-SVG hat keinen gemalten Hintergrund;
+   ohne weißen Grund scheint dahinterliegender Seiteninhalt durch. #}
+<img src="{{ asset('bundles/hugeulabel/' ~ hugEuLabelPath) }}"
+     class="hug-eu-label-img img-fluid"
+     style="{% if hugEuLabelFullWidth|default(false) %}width: 100%{% else %}max-width: {{ hugEuLabelMaxWidth > 0 ? hugEuLabelMaxWidth : 300 }}px{% endif %}; background-color: #fff"
+     alt="{{ 'hugEuLabel.label.alt'|trans|striptags }}"
+     loading="{{ hugEuLabelLazy|default(false) ? 'lazy' : 'eager' }}">

@@ -1,0 +1,93 @@
+{% sw_extends '@Storefront/storefront/page/content/product-detail.html.twig' %}
+
+{# Die beiden Sonder-Anker der PDP: "page_end" (nach CMS-Inhalt/Cross-Selling)
+   und "custom_selector" (unsichtbar gerendert, das Storefront-JS-Plugin
+   HugEuLabelMove verschiebt ans konfigurierte Ziel; Fehlerfall: bleibt
+   unsichtbar + Konsolen-Warnung).
+
+   Die Wrapper (.container bzw. d-none-Move-Container) müssen auch dann
+   entstehen, wenn nur die GPSR-Angaben dort landen (gpsrPosition "combined"
+   folgt der EU-Label-Position, selbst wenn das EU-Label ausgeblendet ist) —
+   daher die kombinierte Vorbedingung. Ob wirklich Inhalt rendert,
+   entscheidet der Slot. #}
+{% block page_content %}
+    {{ parent() }}
+
+    {% set hugGaranWanted = config('HugEuLabel.config.garanEnabled')
+        and (config('HugEuLabel.config.garanPdpMode') ?: 'full') != 'hidden' %}
+    {% set hugGpsrPosition = config('HugEuLabel.config.gpsrPosition') ?: 'combined' %}
+    {% set hugGpsrWanted = config('HugEuLabel.config.gpsrActive') %}
+    {% set hugSlotWanted = (config('HugEuLabel.config.pdpMode') ?: 'full') != 'hidden'
+        or (hugGpsrWanted and hugGpsrPosition == 'combined')
+        or hugGaranWanted %}
+
+    {% if (hugSlotWanted and (config('HugEuLabel.config.pdpPosition') == 'page_end'
+        or (hugGaranWanted and (config('HugEuLabel.config.garanPdpPosition') ?: 'below_buy_button') == 'page_end')))
+        or (hugGpsrWanted and hugGpsrPosition == 'page_end') %}
+        <div class="container">
+            {% sw_include '@HugEuLabel/storefront/component/hug-position-slot.html.twig' with {
+                hugSlotPosition: 'page_end',
+                hugSlotProduct: page.product,
+                hugSlotMarginClass: 'my-3',
+                hugSlotLazy: true
+            } %}
+        </div>
+    {% endif %}
+
+    {% set hugPdpSelector = config('HugEuLabel.config.pdpCustomSelector') %}
+    {% if hugSlotWanted
+        and config('HugEuLabel.config.pdpPosition') == 'custom_selector'
+        and hugPdpSelector %}
+        <div class="d-none"
+             data-hug-eu-label-move="true"
+             data-hug-eu-label-move-options="{{ {
+                 selector: hugPdpSelector,
+                 mode: config('HugEuLabel.config.pdpCustomInsert') ?: 'after'
+             }|json_encode }}">
+            {% sw_include '@HugEuLabel/storefront/component/hug-position-slot.html.twig' with {
+                hugSlotPosition: 'custom_selector',
+                hugSlotProduct: page.product,
+                hugSlotMarginClass: 'my-3'
+            } %}
+        </div>
+    {% endif %}
+
+    {# GARAN-Label an eigenem CSS-Selektor — eigener Move-Wrapper mit eigenem
+       Ziel/Einfügemodus, unabhängig vom EU-Label-Wrapper darüber. #}
+    {% set hugGaranSelector = config('HugEuLabel.config.garanPdpCustomSelector') %}
+    {% if hugGaranWanted
+        and (config('HugEuLabel.config.garanPdpPosition') ?: 'below_buy_button') == 'custom_selector'
+        and hugGaranSelector %}
+        <div class="d-none"
+             data-hug-eu-label-move="true"
+             data-hug-eu-label-move-options="{{ {
+                 selector: hugGaranSelector,
+                 mode: config('HugEuLabel.config.garanPdpCustomInsert') ?: 'after'
+             }|json_encode }}">
+            {% sw_include '@HugEuLabel/storefront/component/hug-garan/garan-label.html.twig' with {
+                hugGaranProduct: page.product,
+                hugGaranMode: config('HugEuLabel.config.garanPdpMode') ?: 'full',
+                hugGaranSurface: 'pdp',
+                hugGaranCollapsible: true
+            } %}
+        </div>
+    {% endif %}
+
+    {# GPSR-Angaben an eigenem CSS-Selektor — eigener Move-Wrapper,
+       unabhängig von EU-Label und GARAN. #}
+    {% set hugGpsrSelector = config('HugEuLabel.config.gpsrCustomSelector') %}
+    {% if hugGpsrWanted
+        and hugGpsrPosition == 'custom_selector'
+        and hugGpsrSelector %}
+        <div class="d-none"
+             data-hug-eu-label-move="true"
+             data-hug-eu-label-move-options="{{ {
+                 selector: hugGpsrSelector,
+                 mode: config('HugEuLabel.config.gpsrCustomInsert') ?: 'after'
+             }|json_encode }}">
+            {% sw_include '@HugEuLabel/storefront/component/hug-gpsr/gpsr-info.html.twig' with {
+                hugGpsrManufacturer: page.product.manufacturer|default(null)
+            } %}
+        </div>
+    {% endif %}
+{% endblock %}

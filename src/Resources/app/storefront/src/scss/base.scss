@@ -1,0 +1,62 @@
+/*
+ * Kompakt-Darstellung (Collapse-Variante): Solange das volle Label
+ * aufgeklappt ist (.collapse.show), wird der Kopf-Banner ausgeblendet —
+ * sonst erschiene die Label-Kopfzeile doppelt (Banner + Kopf des vollen
+ * Labels). Der Toggle-Link wechselt seinen Text mit.
+ * Die Modal-Variante ist nicht betroffen (.modal statt .collapse).
+ */
+.hug-eu-label {
+    .hug-eu-label-text-hide {
+        display: none;
+    }
+
+    &:has(> .collapse.show) {
+        > .hug-eu-label-compact-banner {
+            display: none;
+        }
+
+        .hug-eu-label-text-show {
+            display: none;
+        }
+
+        .hug-eu-label-text-hide {
+            display: inline;
+        }
+    }
+}
+
+/*
+ * GARAN-Garantielabel: Die Labels kommen als Inline-SVG (nur viewBox) und
+ * füllen ihren Container. Nested-Banner = offizielle Kompaktvariante; in der
+ * aufklappbaren Variante verschwindet der Banner, solange das volle Label
+ * offen ist (analog zum Gewährleistungslabel).
+ */
+.hug-garan-label {
+    svg,
+    img {
+        display: block;
+        width: 100%;
+        height: auto;
+        background-color: #fff;
+    }
+
+    .hug-garan-nested-banner {
+        width: 100%;
+    }
+
+    .hug-garan-full {
+        width: 100%;
+        max-width: 420px;
+    }
+
+    &:has(> .collapse.show) > .hug-garan-nested-banner {
+        display: none;
+    }
+
+    .hug-garan-conditions-link {
+        margin-top: 0.25rem;
+    }
+}
+
+// GPSR-Pflichtangaben-Block und gemeinsamer Positions-Slot
+@import 'hug-gpsr';

@@ -1,0 +1,21 @@
+{% sw_extends '@Storefront/storefront/component/delivery-information.html.twig' %}
+
+{# PDP-Position "near_shipping_info": direkt unter Lieferzeit/Versandinfos.
+   Bewusst an diesem Komponenten-Template verankert (nicht am
+   buy_widget_delivery_informations-Block des Buy-Widgets): Themes ersetzen
+   den buy_widget-Block gern komplett, binden aber weiterhin diese
+   Komponente ein — so greift die Position auch dort.
+   Die Komponente wird u. a. auch im Offcanvas-Warenkorb gerendert; EU-Label
+   und GPSR-Angaben sollen aber nur auf der Produktdetailseite an den
+   Versandinfos erscheinen, daher der Aktivitäts-Check auf die PDP-Route. #}
+{% block component_delivery_information %}
+    {{ parent() }}
+
+    {% if app.request.attributes.get('_route') == 'frontend.detail.page' %}
+        {% sw_include '@HugEuLabel/storefront/component/hug-position-slot.html.twig' with {
+            hugSlotPosition: 'near_shipping_info',
+            hugSlotProduct: product,
+            hugSlotMarginClass: 'mt-3'
+        } %}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,26 @@
+{% sw_extends '@Storefront/storefront/component/buy-widget/buy-widget-form.html.twig' %}
+
+{# PDP-Positionen "above_buy_button" / "below_buy_button" — oberhalb des Folds,
+   daher eager loading. Was hier tatsächlich rendert (EU-Label und/oder GPSR),
+   entscheidet der gemeinsame Positions-Slot.
+
+   Bewusst am Container-Block (nicht buy_widget_buy_button) verankert: Der
+   Button-Block liegt in einer col-8, die Themes zum Flex-Container machen
+   können — der Slot würde dort zum Flex-Item neben dem Button und
+   überlappt nachfolgenden Inhalt. Vor/nach der ganzen Zeile bleibt er im
+   normalen Blockfluss. #}
+{% block buy_widget_buy_container %}
+    {% sw_include '@HugEuLabel/storefront/component/hug-position-slot.html.twig' with {
+        hugSlotPosition: 'above_buy_button',
+        hugSlotProduct: product,
+        hugSlotMarginClass: 'mb-3'
+    } %}
+
+    {{ parent() }}
+
+    {% sw_include '@HugEuLabel/storefront/component/hug-position-slot.html.twig' with {
+        hugSlotPosition: 'below_buy_button',
+        hugSlotProduct: product,
+        hugSlotMarginClass: 'mt-3'
+    } %}
+{% endblock %}

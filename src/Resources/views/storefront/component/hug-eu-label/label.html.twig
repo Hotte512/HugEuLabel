@@ -1,0 +1,115 @@
+{# Zentrales EU-Gewährleistungslabel (Richtlinie (EU) 2024/825, DVO (EU) 2025/1960).
+
+   Rechtliche Vorgabe: Vor Vertragsabschluss muss das Label vollständig,
+   unmittelbar sichtbar und farbig dargestellt werden. Der Kompakt-Modus
+   (Label-Kopf + Klick) erfüllt das nach herrschender Lesart NICHT und ist
+   eine bewusste Händler-Entscheidung (Hinweis in der Plugin-Config).
+
+   Parameter (per sw_include "with"):
+     - hugEuLabelMode:    'full' | 'compact' (Pflicht)
+     - hugEuLabelSurface: 'pdp' | 'confirm' | 'cart' | 'offcanvas' (Pflicht,
+                          macht Collapse-/Modal-IDs eindeutig)
+     - hugEuLabelClass:   zusätzliche CSS-Klassen für den Wrapper (optional)
+     - hugEuLabelLazy:    true = loading="lazy" (nur unterhalb des Folds) #}
+{% if config('HugEuLabel.config.active') %}
+    {% set hugEuLabelPath = hug_eu_label_path(context) %}
+    {% if hugEuLabelPath %}
+        {% set hugEuLabelMaxWidth = config('HugEuLabel.config.maxWidth') %}
+        {% set hugEuLabelWidth = hugEuLabelMaxWidth > 0 ? hugEuLabelMaxWidth : 300 %}
+        <div class="hug-eu-label{% if hugEuLabelClass is defined %} {{ hugEuLabelClass }}{% endif %}">
+            {% if hugEuLabelMode == 'compact' %}
+                {% set hugEuLabelBehavior = config('HugEuLabel.config.compactBehavior') ?: 'collapse' %}
+                {% set hugEuLabelTargetId = 'hug-eu-label-full-' ~ hugEuLabelSurface %}
+                {# Banner = oberer Streifen des UNVERÄNDERTEN Original-SVGs,
+                   rein per CSS zugeschnitten (Seitenverhältnis 595:142 ≈
+                   obere 17 % der A4-Seite = blauer Label-Kopf). #}
+                {% set hugEuLabelCompactWidth = config('HugEuLabel.config.compactWidth') %}
+                {% set hugEuLabelCompactWidth = hugEuLabelCompactWidth > 0 ? hugEuLabelCompactWidth : hugEuLabelWidth %}
+                <button type="button"
+                        class="hug-eu-label-compact-banner border-0 p-0 d-block"
+                        style="max-width: {{ hugEuLabelCompactWidth }}px; width: 100%; aspect-ratio: 595 / 142; overflow: hidden; background-color: #fff; cursor: pointer"
+                        {% if hugEuLabelBehavior == 'modal' %}
+                            data-bs-toggle="modal"
+                            data-bs-target="#{{ hugEuLabelTargetId }}"
+                        {% else %}
+                            data-bs-toggle="collapse"
+                            data-bs-target="#{{ hugEuLabelTargetId }}"
+                            aria-expanded="false"
+                            aria-controls="{{ hugEuLabelTargetId }}"
+                        {% endif %}
+                        aria-label="{{ 'hugEuLabel.label.showFull'|trans|striptags }}">
+                    <img src="{{ asset('bundles/hugeulabel/' ~ hugEuLabelPath) }}"
+                         style="width: 100%; display: block"
+                         alt="{{ 'hugEuLabel.label.alt'|trans|striptags }}"
+                         loading="{{ hugEuLabelLazy|default(false) ? 'lazy' : 'eager' }}">
+                </button>
+                <button type="button"
+                        class="btn btn-link btn-sm px-0 hug-eu-label-compact-toggle"
+                        {% if hugEuLabelBehavior == 'modal' %}
+                            data-bs-toggle="modal"
+                            data-bs-target="#{{ hugEuLabelTargetId }}"
+                        {% else %}
+                            data-bs-toggle="collapse"
+                            data-bs-target="#{{ hugEuLabelTargetId }}"
+                            aria-expanded="false"
+                            aria-controls="{{ hugEuLabelTargetId }}"
+                        {% endif %}>
+                    {% if hugEuLabelBehavior == 'modal' %}
+                        {{ 'hugEuLabel.label.showFull'|trans|sw_sanitize }}
+                    {% else %}
+                        {# Text-Wechsel und Ausblenden des Banners im
+                           aufgeklappten Zustand regelt base.scss über
+                           :has(> .collapse.show). #}
+                        <span class="hug-eu-label-text-show">{{ 'hugEuLabel.label.showFull'|trans|sw_sanitize }}</span>
+                        <span class="hug-eu-label-text-hide">{{ 'hugEuLabel.label.hideFull'|trans|sw_sanitize }}</span>
+                    {% endif %}
+                </button>
+                {% if hugEuLabelBehavior == 'modal' %}
+                    <div class="modal fade" id="{{ hugEuLabelTargetId }}" tabindex="-1"
+                         aria-labelledby="{{ hugEuLabelTargetId }}-title" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title fs-6" id="{{ hugEuLabelTargetId }}-title">
+                                        {{ 'hugEuLabel.label.modalTitle'|trans|sw_sanitize }}
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="{{ 'hugEuLabel.label.close'|trans|striptags }}"></button>
+                                </div>
+                                <div class="modal-body d-flex justify-content-center">
+                                    {% sw_include '@HugEuLabel/storefront/component/hug-eu-label/label-image.html.twig' with {
+                                        hugEuLabelPath: hugEuLabelPath,
+                                        hugEuLabelLazy: true,
+                                        hugEuLabelFullWidth: true
+                                    } %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="collapse" id="{{ hugEuLabelTargetId }}">
+                        {# Auch das aufgeklappte Label selbst klappt per Klick
+                           wieder ein — daher als Button-Trigger umschlossen. #}
+                        <button type="button"
+                                class="hug-eu-label-collapse-image border-0 p-0 d-block bg-transparent"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#{{ hugEuLabelTargetId }}"
+                                aria-expanded="true"
+                                aria-controls="{{ hugEuLabelTargetId }}"
+                                aria-label="{{ 'hugEuLabel.label.hideFull'|trans|striptags }}">
+                            {% sw_include '@HugEuLabel/storefront/component/hug-eu-label/label-image.html.twig' with {
+                                hugEuLabelPath: hugEuLabelPath,
+                                hugEuLabelLazy: true
+                            } %}
+                        </button>
+                    </div>
+                {% endif %}
+            {% else %}
+                {% sw_include '@HugEuLabel/storefront/component/hug-eu-label/label-image.html.twig' with {
+                    hugEuLabelPath: hugEuLabelPath,
+                    hugEuLabelLazy: hugEuLabelLazy|default(false)
+                } %}
+            {% endif %}
+        </div>
+    {% endif %}
+{% endif %}

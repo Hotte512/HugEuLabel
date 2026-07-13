@@ -1,0 +1,30 @@
+{
+    "root": true,
+    "env": {
+        "browser": true,
+        "es2022": true,
+        "jest": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 2022,
+        "sourceType": "module"
+    },
+    "extends": ["eslint:recommended"],
+    "ignorePatterns": ["**/dist/**", "**/node_modules/**", "src/Resources/public/**"],
+    "globals": {
+        "Shopware": "readonly"
+    },
+    "rules": {
+        "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+        "prefer-const": "error",
+        "eqeqeq": ["error", "always"]
+    },
+    "overrides": [
+        {
+            "files": ["tests/administration/**/*.js", "*.config.js", "babel.config.js"],
+            "env": {
+                "node": true
+            }
+        }
+    ]
+}

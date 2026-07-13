@@ -1,0 +1,103 @@
+{% sw_extends '@Storefront/storefront/page/checkout/confirm/index.html.twig' %}
+
+{# Checkout-Bestätigungsseite — Label immer eager laden (vor Vertragsabschluss
+   unmittelbar sichtbar). Die AGB-Checkbox existiert in 6.7 an zwei Stellen,
+   abhängig vom Feature-Flag v6.8.0.0; beide Varianten werden bedient. #}
+
+{# Position "above_terms" — Legacy-TOS-Block im Hauptinhalt (Flag aus) #}
+{% block page_checkout_confirm_tos %}
+    {% set hugEuLabelConfirmMode = config('HugEuLabel.config.checkoutConfirmMode') ?: 'full' %}
+    {% if not feature('v6.8.0.0')
+        and hugEuLabelConfirmMode != 'hidden'
+        and config('HugEuLabel.config.checkoutConfirmPosition') == 'above_terms' %}
+        {% sw_include '@HugEuLabel/storefront/component/hug-eu-label/label.html.twig' with {
+            hugEuLabelMode: hugEuLabelConfirmMode,
+            hugEuLabelSurface: 'confirm',
+            hugEuLabelClass: 'hug-eu-label-confirm mb-3'
+        } %}
+    {% endif %}
+
+    {{ parent() }}
+{% endblock %}
+
+{# Position "above_terms" — TOS-Block in der Sidebar (Flag an, 6.7-Standard) #}
+{% block page_checkout_confirm_tos_auto_confirmed %}
+    {% set hugEuLabelConfirmMode = config('HugEuLabel.config.checkoutConfirmMode') ?: 'full' %}
+    {% if feature('v6.8.0.0')
+        and hugEuLabelConfirmMode != 'hidden'
+        and config('HugEuLabel.config.checkoutConfirmPosition') == 'above_terms' %}
+        {% sw_include '@HugEuLabel/storefront/component/hug-eu-label/label.html.twig' with {
+            hugEuLabelMode: hugEuLabelConfirmMode,
+            hugEuLabelSurface: 'confirm',
+            hugEuLabelClass: 'hug-eu-label-confirm mb-3'
+        } %}
+    {% endif %}
+
+    {{ parent() }}
+{% endblock %}
+
+{# Position "below_summary" — unter der Bestellübersicht in der Sidebar #}
+{% block page_checkout_aside_summary %}
+    {{ parent() }}
+
+    {% set hugEuLabelConfirmMode = config('HugEuLabel.config.checkoutConfirmMode') ?: 'full' %}
+    {% if hugEuLabelConfirmMode != 'hidden'
+        and config('HugEuLabel.config.checkoutConfirmPosition') == 'below_summary' %}
+        {% sw_include '@HugEuLabel/storefront/component/hug-eu-label/label.html.twig' with {
+            hugEuLabelMode: hugEuLabelConfirmMode,
+            hugEuLabelSurface: 'confirm',
+            hugEuLabelClass: 'hug-eu-label-confirm mt-3'
+        } %}
+    {% endif %}
+{% endblock %}
+
+{# Position "below_line_items" — unter den Bestellpositionen.
+   Außerdem Render-Anker für "custom_selector": unsichtbar gerendert; das
+   Storefront-JS-Plugin HugEuLabelMove verschiebt das Element an den
+   konfigurierten Selektor (Fehlerfall: unsichtbar + Konsolen-Warnung). #}
+{% block page_checkout_confirm_product_table %}
+    {{ parent() }}
+
+    {% set hugEuLabelConfirmMode = config('HugEuLabel.config.checkoutConfirmMode') ?: 'full' %}
+    {% if hugEuLabelConfirmMode != 'hidden'
+        and config('HugEuLabel.config.checkoutConfirmPosition') == 'below_line_items' %}
+        {% sw_include '@HugEuLabel/storefront/component/hug-eu-label/label.html.twig' with {
+            hugEuLabelMode: hugEuLabelConfirmMode,
+            hugEuLabelSurface: 'confirm',
+            hugEuLabelClass: 'hug-eu-label-confirm mt-3'
+        } %}
+    {% endif %}
+
+    {% set hugEuLabelConfirmSelector = config('HugEuLabel.config.confirmCustomSelector') %}
+    {% if hugEuLabelConfirmMode != 'hidden'
+        and config('HugEuLabel.config.checkoutConfirmPosition') == 'custom_selector'
+        and hugEuLabelConfirmSelector %}
+        <div class="d-none"
+             data-hug-eu-label-move="true"
+             data-hug-eu-label-move-options="{{ {
+                 selector: hugEuLabelConfirmSelector,
+                 mode: config('HugEuLabel.config.confirmCustomInsert') ?: 'after'
+             }|json_encode }}">
+            {% sw_include '@HugEuLabel/storefront/component/hug-eu-label/label.html.twig' with {
+                hugEuLabelMode: hugEuLabelConfirmMode,
+                hugEuLabelSurface: 'confirm',
+                hugEuLabelClass: 'hug-eu-label-confirm my-3'
+            } %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{# Position "above_submit" — unmittelbar über dem Bestell-Button #}
+{% block page_checkout_confirm_form_submit %}
+    {% set hugEuLabelConfirmMode = config('HugEuLabel.config.checkoutConfirmMode') ?: 'full' %}
+    {% if hugEuLabelConfirmMode != 'hidden'
+        and config('HugEuLabel.config.checkoutConfirmPosition') == 'above_submit' %}
+        {% sw_include '@HugEuLabel/storefront/component/hug-eu-label/label.html.twig' with {
+            hugEuLabelMode: hugEuLabelConfirmMode,
+            hugEuLabelSurface: 'confirm',
+            hugEuLabelClass: 'hug-eu-label-confirm mb-3'
+        } %}
+    {% endif %}
+
+    {{ parent() }}
+{% endblock %}

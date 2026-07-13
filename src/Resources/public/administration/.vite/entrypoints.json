@@ -1,0 +1,23 @@
+{
+  "base": "/bundles/hugeulabel/administration/",
+  "entryPoints": {
+    "hug-eu-label": {
+      "css": [],
+      "dynamic": [],
+      "js": [
+        "/bundles/hugeulabel/administration/assets/hug-eu-label-l0sNRNKZ.js"
+      ],
+      "legacy": false,
+      "preload": []
+    }
+  },
+  "legacy": false,
+  "metadatas": {},
+  "version": [
+    "7.1.0",
+    7,
+    1,
+    0
+  ],
+  "viteServer": null
+}

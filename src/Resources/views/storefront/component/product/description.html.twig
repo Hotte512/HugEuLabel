@@ -1,0 +1,28 @@
+{% sw_extends '@Storefront/storefront/component/product/description.html.twig' %}
+
+{# PDP-Position "below_description": direkt unter dem Beschreibungstext
+   (vor der Eigenschaften-Liste). Unterhalb des Folds → lazy loading.
+   Was hier rendert (EU-Label und/oder GPSR), entscheidet der Slot. #}
+{% block component_product_description_content_text %}
+    {{ parent() }}
+
+    {% sw_include '@HugEuLabel/storefront/component/hug-position-slot.html.twig' with {
+        hugSlotPosition: 'below_description',
+        hugSlotProduct: product,
+        hugSlotMarginClass: 'mt-3',
+        hugSlotLazy: true
+    } %}
+{% endblock %}
+
+{# PDP-Position "tab_description_end": ganz am Ende des Beschreibungs-Tabs
+   (nach den Eigenschaften). Unterhalb des Folds → lazy loading. #}
+{% block component_product_description_container %}
+    {{ parent() }}
+
+    {% sw_include '@HugEuLabel/storefront/component/hug-position-slot.html.twig' with {
+        hugSlotPosition: 'tab_description_end',
+        hugSlotProduct: product,
+        hugSlotMarginClass: 'mt-3',
+        hugSlotLazy: true
+    } %}
+{% endblock %}

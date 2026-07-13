@@ -1,0 +1,92 @@
+{# Gemeinsamer Positions-Slot: rendert an einem PDP-Anker (Positions-Id) alle
+   Blöcke, die dort konfiguriert sind — EU-Gewährleistungslabel,
+   GARAN-Garantielabel und/oder GPSR-Pflichtangaben. Ersetzt die frühere
+   je-Template-if/else-Kaskade; die Override-Templates binden nur noch
+   diesen Slot ein.
+
+   GPSR-Position "combined" folgt der EU-Label-Position (pdpPosition) — auch
+   auf dessen Sonderpositionen (page_end, custom_selector, near_shipping_info)
+   und auch dann, wenn das EU-Label selbst ausgeblendet ist (pdpMode hidden):
+   dann rendert der GPSR-Block dort allein.
+
+   Beide Blöcke werden erst in Variablen gerendert (set/endset); der Wrapper
+   entsteht nur, wenn mindestens ein Block Inhalt liefert — kein leerer
+   (Flex-)Container, keine Geister-Abstände, wenn z. B. GPSR-Daten und
+   Fallback fehlen oder die Label-Datei nicht existiert.
+
+   Parameter (per sw_include "with"):
+     - hugSlotPosition:    Positions-Id dieses Ankers (Pflicht), z. B.
+                           'below_buy_button', 'page_end', 'custom_selector'
+     - hugSlotProduct:     Produkt — liefert den Hersteller für GPSR (optional)
+     - hugSlotMarginClass: Abstands-Klassen für den Slot-Wrapper (optional)
+     - hugSlotLazy:        true = Label-Bild lazy laden (optional) #}
+{% set hugSlotPdpMode = config('HugEuLabel.config.pdpMode') ?: 'full' %}
+{% set hugSlotPdpPosition = config('HugEuLabel.config.pdpPosition') %}
+{% set hugSlotGpsrCombined = (config('HugEuLabel.config.gpsrPosition') ?: 'combined') == 'combined' %}
+{% set hugSlotGpsrPosition = hugSlotGpsrCombined ? hugSlotPdpPosition : config('HugEuLabel.config.gpsrPosition') %}
+
+{% set hugSlotEuHtml %}
+    {%- if hugSlotPdpMode != 'hidden' and hugSlotPdpPosition == hugSlotPosition -%}
+        {% sw_include '@HugEuLabel/storefront/component/hug-eu-label/label.html.twig' with {
+            hugEuLabelMode: hugSlotPdpMode,
+            hugEuLabelSurface: 'pdp',
+            hugEuLabelClass: 'hug-eu-label-pdp',
+            hugEuLabelLazy: hugSlotLazy|default(false)
+        } %}
+    {%- endif -%}
+{% endset %}
+
+{# GPSR mit EIGENER custom_selector-Position läuft nicht über den Slot
+   (eigener Move-Wrapper im product-detail-Template); nur "combined" folgt
+   dem EU-Label auch an dessen Custom-Position. #}
+{% set hugSlotGpsrHtml %}
+    {%- if hugSlotGpsrPosition == hugSlotPosition
+        and not (hugSlotPosition == 'custom_selector' and not hugSlotGpsrCombined) -%}
+        {% sw_include '@HugEuLabel/storefront/component/hug-gpsr/gpsr-info.html.twig' with {
+            hugGpsrManufacturer: hugSlotProduct.manufacturer|default(null)
+        } %}
+    {%- endif -%}
+{% endset %}
+
+{# GARAN am custom_selector-Anker läuft NICHT über den Slot: Es hat einen
+   eigenen Selektor/Einfügemodus und damit einen eigenen Move-Wrapper im
+   product-detail-Template — sonst landete es im Wrapper des EU-Labels. #}
+{% set hugSlotGaranMode = config('HugEuLabel.config.garanPdpMode') ?: 'full' %}
+{% set hugSlotGaranHtml %}
+    {%- if hugSlotGaranMode != 'hidden'
+        and hugSlotPosition != 'custom_selector'
+        and (config('HugEuLabel.config.garanPdpPosition') ?: 'below_buy_button') == hugSlotPosition
+        and hugSlotProduct is defined and hugSlotProduct -%}
+        {% sw_include '@HugEuLabel/storefront/component/hug-garan/garan-label.html.twig' with {
+            hugGaranProduct: hugSlotProduct,
+            hugGaranMode: hugSlotGaranMode,
+            hugGaranSurface: 'pdp',
+            hugGaranCollapsible: true
+        } %}
+    {%- endif -%}
+{% endset %}
+
+{% set hugSlotHasEu = hugSlotEuHtml|trim != '' %}
+{% set hugSlotHasGpsr = hugSlotGpsrHtml|trim != '' %}
+{% set hugSlotHasGaran = hugSlotGaranHtml|trim != '' %}
+
+{% if hugSlotHasEu or hugSlotHasGpsr or hugSlotHasGaran %}
+    {# Layout greift, sobald mindestens zwei Blöcke am selben Anker stehen.
+       slotLayout ersetzt das frühere gpsrCombinedLayout; gespeicherte
+       Alt-Werte gelten als Fallback weiter. #}
+    {% set hugSlotVisibleCount = (hugSlotHasEu ? 1 : 0) + (hugSlotHasGaran ? 1 : 0) + (hugSlotHasGpsr ? 1 : 0) %}
+    {% set hugSlotLayoutClass = '' %}
+    {% if hugSlotVisibleCount > 1 %}
+        {% set hugSlotLayout = config('HugEuLabel.config.slotLayout')
+            ?: config('HugEuLabel.config.gpsrCombinedLayout')
+            ?: 'stacked' %}
+        {% set hugSlotLayoutClass = hugSlotLayout == 'side_by_side'
+            ? ' hug-position-slot--side-by-side'
+            : ' hug-position-slot--stacked' %}
+    {% endif %}
+    <div class="hug-position-slot{{ hugSlotLayoutClass }}{% if hugSlotMarginClass is defined and hugSlotMarginClass %} {{ hugSlotMarginClass }}{% endif %}">
+        {{ hugSlotEuHtml }}
+        {{ hugSlotGaranHtml }}
+        {{ hugSlotGpsrHtml }}
+    </div>
+{% endif %}

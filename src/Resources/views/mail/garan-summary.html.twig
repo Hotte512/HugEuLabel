@@ -1,0 +1,48 @@
+{# Garantieübersicht für die Bestellbestätigungs-Mail (dompdf, A4).
+   Bewusst schlichtes, druckfestes Layout ohne externe Ressourcen. #}
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #222; }
+        h1 { font-size: 16px; margin-bottom: 2px; }
+        p.intro { margin-top: 0; color: #555; }
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        th, td { border: 1px solid #999; padding: 6px 8px; text-align: left; vertical-align: top; }
+        th { background: #efefef; }
+        .duration { text-align: center; white-space: nowrap; }
+        .url { word-break: break-all; color: #555; }
+    </style>
+</head>
+<body>
+    <h1>Garantieinformationen zu Ihrer Bestellung</h1>
+    <p class="intro">
+        Für die folgenden Artikel gewährt der jeweilige Hersteller eine
+        gewerbliche Haltbarkeitsgarantie (unabhängig von der gesetzlichen
+        Gewährleistung von mindestens zwei Jahren).
+    </p>
+    <table>
+        <thead>
+            <tr>
+                <th>Artikel</th>
+                <th>Artikel-Nr.</th>
+                <th>Hersteller</th>
+                <th>Garantiedauer</th>
+                <th>Garantiebedingungen</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.label }}</td>
+                    <td>{{ item.productNumber }}</td>
+                    <td>{{ item.data.manufacturerName }}</td>
+                    <td class="duration">{{ item.data.durationYears }} Jahre</td>
+                    <td class="url">{{ item.data.conditionsUrl }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
