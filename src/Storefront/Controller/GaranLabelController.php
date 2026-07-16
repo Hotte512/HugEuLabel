@@ -6,9 +6,9 @@ namespace Hug\EuLabel\Storefront\Controller;
 
 use Hug\EuLabel\Service\GaranLabelService;
 use Shopware\Core\Content\Product\ProductCollection;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Uuid\Uuid;
+use Shopware\Core\System\SalesChannel\Entity\SalesChannelRepository;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,11 +25,11 @@ use Symfony\Component\Routing\Attribute\Route;
 class GaranLabelController
 {
     /**
-     * @param EntityRepository<ProductCollection> $productRepository
+     * @param SalesChannelRepository<ProductCollection> $productRepository
      */
     public function __construct(
         private readonly GaranLabelService $labelService,
-        private readonly EntityRepository $productRepository,
+        private readonly SalesChannelRepository $productRepository,
     ) {
     }
 
@@ -49,7 +49,9 @@ class GaranLabelController
         $criteria->setTitle('hug-eu-label::garan-label-route');
         $criteria->addAssociation('manufacturer');
 
-        $product = $this->productRepository->search($criteria, $context->getContext())->getEntities()->first();
+        // Sales-Channel-Repository erzwingt Sichtbarkeit/Aktiv-Status/Kanal-
+        // Zuordnung: im Kanal unsichtbare Produkte liefern null → 404.
+        $product = $this->productRepository->search($criteria, $context)->getEntities()->first();
 
         $svg = $this->labelService->render($product, $variant, $context);
         if ($svg === '') {

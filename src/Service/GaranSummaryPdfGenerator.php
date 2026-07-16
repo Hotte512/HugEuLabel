@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hug\EuLabel\Service;
 
 use Dompdf\Dompdf;
+use Dompdf\Options;
 use Psr\Log\LoggerInterface;
 use Twig\Environment;
 
@@ -30,7 +31,15 @@ class GaranSummaryPdfGenerator
         try {
             $html = $this->twig->render(self::TEMPLATE, ['items' => $items]);
 
-            $dompdf = new Dompdf();
+            // Defense-in-depth: Remote-Ressourcen (SSRF) und eingebettetes
+            // PHP (RCE) explizit deaktivieren, damit ein künftiger
+            // Library-Default die Sicherheit nicht still ändert. Das Template
+            // enthält ohnehin nur Inline-CSS, keine externen Ressourcen.
+            $options = new Options();
+            $options->setIsRemoteEnabled(false);
+            $options->setIsPhpEnabled(false);
+
+            $dompdf = new Dompdf($options);
             $dompdf->loadHtml($html);
             $dompdf->setPaper('A4');
             $dompdf->render();

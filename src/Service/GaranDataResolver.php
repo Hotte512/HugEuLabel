@@ -70,6 +70,16 @@ class GaranDataResolver
         $mediaId = $this->stringOrNull($productFields[self::FIELD_P_MEDIA] ?? null)
             ?? ($manufacturerActive ? $this->stringOrNull($manufacturerFields[self::FIELD_MEDIA] ?? null) : null);
 
+        // Die Bedingungs-URL landet als href im Storefront. Nur http/https/
+        // mailto zulassen — sonst wäre z. B. "javascript:…" ein Stored-XSS.
+        // Ungültige URL verwerfen (Media-PDF-Fallback greift dann ggf.).
+        if ($url !== null && !$this->hasSafeScheme($url)) {
+            $this->logger?->warning('HugEuLabel: GARAN conditions URL uses a disallowed scheme; ignored (only http, https, mailto allowed).', [
+                'productId' => $product->getId(),
+            ]);
+            $url = null;
+        }
+
         $anythingMaintained = $duration !== null || $url !== null || $mediaId !== null || $manufacturerActive;
         if (!$anythingMaintained) {
             return null;
@@ -129,6 +139,16 @@ class GaranDataResolver
             ->search(new Criteria([$manufacturerId]), $context)
             ->getEntities()
             ->first();
+    }
+
+    private function hasSafeScheme(string $url): bool
+    {
+        // Steuerzeichen/Whitespace vor der Schema-Prüfung entfernen: Browser
+        // ignorieren sie innerhalb des Schemas ("java\tscript:" führt aus).
+        $normalized = preg_replace('/[\x00-\x20]+/', '', $url) ?? '';
+        $scheme = parse_url($normalized, \PHP_URL_SCHEME);
+
+        return \is_string($scheme) && \in_array(strtolower($scheme), ['http', 'https', 'mailto'], true);
     }
 
     private function intOrNull(mixed $value): ?int

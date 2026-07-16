@@ -40,6 +40,28 @@ class CustomFieldSetInstaller
     }
 
     /**
+     * Entfernt bei Deinstallation beide GARAN-Sets samt gepflegter Daten —
+     * aber nur, wenn der Nutzer „App-Daten löschen" gewählt hat (analog zum
+     * GPSR-Set). Bei keepUserData bleiben die Felder erhalten.
+     */
+    public function uninstall(bool $keepUserData, Context $context): void
+    {
+        if ($keepUserData) {
+            return;
+        }
+
+        $ids = array_values($this->findExistingSetIds($context));
+        if ($ids === []) {
+            return;
+        }
+
+        $this->customFieldSetRepository->delete(
+            array_map(static fn (string $id): array => ['id' => $id], $ids),
+            $context,
+        );
+    }
+
+    /**
      * @return array<string, string> name => id
      */
     private function findExistingSetIds(Context $context): array

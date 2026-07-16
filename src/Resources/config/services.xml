@@ -85,7 +85,7 @@
 
         <service id="Hug\EuLabel\Storefront\Controller\GaranLabelController" public="true">
             <argument type="service" id="Hug\EuLabel\Service\GaranLabelService"/>
-            <argument type="service" id="product.repository"/>
+            <argument type="service" id="sales_channel.product.repository"/>
             <tag name="controller.service_arguments"/>
         </service>
 

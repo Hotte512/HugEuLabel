@@ -13,7 +13,7 @@ use Shopware\Core\Framework\Api\Context\SystemSource;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
-use Shopware\Core\Test\Stub\DataAbstractionLayer\StaticEntityRepository;
+use Shopware\Core\Test\Stub\DataAbstractionLayer\StaticSalesChannelRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -58,9 +58,10 @@ final class GaranLabelControllerTest extends TestCase
         $product->setId(Uuid::randomHex());
         $product->setUniqueIdentifier($product->getId());
 
-        /** @var StaticEntityRepository<ProductCollection> $productRepository */
-        $productRepository = new StaticEntityRepository([
-            new ProductCollection([$product]),
+        // Sales-Channel-Repository: erzwingt Sichtbarkeit/Aktiv-Status —
+        // ein im Kanal unsichtbares Produkt käme hier gar nicht durch.
+        /** @var StaticSalesChannelRepository<ProductCollection> $productRepository */
+        $productRepository = new StaticSalesChannelRepository([
             new ProductCollection([$product]),
         ]);
 

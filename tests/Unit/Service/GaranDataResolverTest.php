@@ -189,6 +189,61 @@ final class GaranDataResolverTest extends TestCase
         self::assertSame('Holzwerk GmbH', $data->manufacturerName);
     }
 
+    public function testJavascriptSchemeUrlIsRejectedAndLabelSuppressed(): void
+    {
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects(self::atLeastOnce())->method('warning');
+
+        $product = $this->createProduct(
+            manufacturer: $this->createManufacturer(['hug_garan_active' => true, 'hug_garan_duration_years' => 5, 'hug_garan_conditions_url' => 'javascript:alert(document.cookie)']),
+        );
+
+        self::assertNull($this->createResolver(logger: $logger)->resolve($product, $this->context));
+    }
+
+    public function testWhitespaceObfuscatedSchemeIsRejected(): void
+    {
+        // Browser ignorieren Whitespace im Schema — "java\tscript:" führt aus.
+        $product = $this->createProduct(
+            manufacturer: $this->createManufacturer(['hug_garan_active' => true, 'hug_garan_duration_years' => 5, 'hug_garan_conditions_url' => "java\tscript:alert(1)"]),
+        );
+
+        self::assertNull($this->createResolver()->resolve($product, $this->context));
+    }
+
+    public function testDisallowedSchemeUrlFallsBackToMediaPdf(): void
+    {
+        $mediaId = Uuid::randomHex();
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects(self::once())->method('warning');
+
+        $product = $this->createProduct(
+            manufacturer: $this->createManufacturer([
+                'hug_garan_active' => true,
+                'hug_garan_duration_years' => 5,
+                'hug_garan_conditions_url' => 'javascript:alert(1)',
+                'hug_garan_conditions_media' => $mediaId,
+            ]),
+        );
+
+        $data = $this->createResolver(logger: $logger, mediaUrl: 'https://shop.example/media/garantie.pdf')->resolve($product, $this->context);
+
+        self::assertNotNull($data);
+        self::assertSame('https://shop.example/media/garantie.pdf', $data->conditionsUrl);
+    }
+
+    public function testMailtoSchemeUrlIsAccepted(): void
+    {
+        $product = $this->createProduct(
+            manufacturer: $this->createManufacturer(['hug_garan_active' => true, 'hug_garan_duration_years' => 5, 'hug_garan_conditions_url' => 'mailto:garantie@example.com']),
+        );
+
+        $data = $this->createResolver()->resolve($product, $this->context);
+
+        self::assertNotNull($data);
+        self::assertSame('mailto:garantie@example.com', $data->conditionsUrl);
+    }
+
     /**
      * @param EntityRepository<ProductManufacturerCollection>|null $manufacturerRepository
      */

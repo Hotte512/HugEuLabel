@@ -1,7 +1,7 @@
 {
     "name": "hug/eu-label",
     "description": "Displays the EU warranty label (Directive (EU) 2024/825, Implementing Regulation (EU) 2025/1960) and the GPSR manufacturer information (Regulation (EU) 2023/988, Art. 19) in the storefront and attaches the label to the order confirmation mail",
-    "version": "1.4.1",
+    "version": "1.4.3",
     "type": "shopware-platform-plugin",
     "license": "GPL-3.0-or-later",
     "homepage": "https://github.com/Hotte512/HugEuLabel",
@@ -41,7 +41,8 @@
         "description": {
             "de-DE": "EU-Gewährleistungslabel (Storefront + Mail-Anhang), GARAN-Garantielabel für Haltbarkeitsgarantien und GPSR-Herstellerangaben — konfigurierbar pro Sales Channel.",
             "en-GB": "EU warranty label (storefront + mail attachment), GARAN guarantee label for durability guarantees and GPSR manufacturer information — configurable per sales channel."
-        }
+        },
+        "plugin-icon": "src/Resources/config/plugin.png"
     },
     "config": {
         "allow-plugins": {

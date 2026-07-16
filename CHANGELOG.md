@@ -4,6 +4,22 @@ Alle nennenswerten Änderungen an diesem Plugin werden in dieser Datei dokumenti
 
 Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/).
 
+## [Unreleased]
+
+## [1.4.3] - 2026-07-16
+
+### Sicherheit
+
+- Garantieübersicht-PDF: dompdf-Optionen jetzt explizit gesetzt (`isRemoteEnabled=false`, `isPhpEnabled=false`) — Defense-in-depth gegen SSRF/RCE, falls sich ein Library-Default künftig ändert (Verhalten unverändert, das Template nutzt ohnehin nur Inline-CSS)
+- GARAN-Zusatzfeld-Sets (`hug_garan_manufacturer`/`hug_garan_product`) werden bei Deinstallation entfernt, wenn „App-Daten löschen" gewählt ist — analog zum GPSR-Set; bei `keepUserData` bleiben sie erhalten (vorher blieben sie immer stehen)
+
+## [1.4.2] - 2026-07-16
+
+### Sicherheit
+
+- GARAN-Bedingungs-URL: Es sind nur noch die Schemata `http`, `https` und `mailto` zulässig (auch whitespace-obfuskierte Varianten werden erkannt) — verhindert eine mögliche Stored-XSS-Kette über eine `javascript:`-URL in den Hersteller-/Produkt-Zusatzfeldern. Eine unzulässige URL wird verworfen (der Media-PDF-Fallback greift ggf.) und im Log-Channel `hug_eu_label` protokolliert
+- GARAN-Label-Route (`/hug-garan-label/…`) lädt das Produkt jetzt über `sales_channel.product.repository` statt `product.repository` — im Sales-Channel nicht sichtbare oder inaktive Produkte liefern 404 statt Label-Daten (Herstellername, Modell-Kennung inkl. EAN, Garantiedauer)
+
 ## [1.4.1] - 2026-07-13
 
 ### Hinzugefügt
@@ -16,6 +32,10 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/).
 
 - README/ASSETS: Installations- und Wartungsbefehle umgebungsneutral formuliert (generisches `bin/console` statt DDEV-spezifischer Aufrufe) — Vorbereitung der Veröffentlichung auf GitHub
 - README-Konfigurationsreferenz auf Stand gebracht: `gpsrMaxWidth`/`gpsrFontSize` (aus 1.4.0) und `gpsrCustomSelector`/`gpsrCustomInsert` samt erweiterter `gpsrPosition`-Optionen (aus 1.3.0) ergänzt, entfallenes `gpsrCombinedLayout` entfernt
+
+### Hinzugefügt
+
+- Plugin-Icon fürs Admin-Listing: ein Paket, das unter EU-Etiketten fast verschwindet (plugin.png, SVG-Quelle liegt daneben)
 
 ## [1.4.0] - 2026-07-13
 

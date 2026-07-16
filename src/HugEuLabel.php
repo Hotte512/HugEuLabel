@@ -15,13 +15,13 @@ class HugEuLabel extends Plugin
 {
     public function install(InstallContext $installContext): void
     {
-        $this->installGaranCustomFieldSets($installContext);
+        $this->createGaranCustomFieldSetInstaller()->install($installContext->getContext());
         $this->createGpsrCustomFieldSetInstaller()->ensureCustomFieldSet($installContext->getContext());
     }
 
     public function update(UpdateContext $updateContext): void
     {
-        $this->installGaranCustomFieldSets($updateContext);
+        $this->createGaranCustomFieldSetInstaller()->install($updateContext->getContext());
         $this->createGpsrCustomFieldSetInstaller()->ensureCustomFieldSet($updateContext->getContext());
     }
 
@@ -29,20 +29,24 @@ class HugEuLabel extends Plugin
     {
         parent::uninstall($uninstallContext);
 
+        $this->createGaranCustomFieldSetInstaller()->uninstall(
+            $uninstallContext->keepUserData(),
+            $uninstallContext->getContext(),
+        );
         $this->createGpsrCustomFieldSetInstaller()->uninstallCustomFieldSet(
             $uninstallContext->keepUserData(),
             $uninstallContext->getContext(),
         );
     }
 
-    private function installGaranCustomFieldSets(InstallContext $context): void
+    private function createGaranCustomFieldSetInstaller(): CustomFieldSetInstaller
     {
         \assert($this->container !== null);
 
         /** @var \Shopware\Core\Framework\DataAbstractionLayer\EntityRepository<\Shopware\Core\System\CustomField\Aggregate\CustomFieldSet\CustomFieldSetCollection> $repository */
         $repository = $this->container->get('custom_field_set.repository');
 
-        (new CustomFieldSetInstaller($repository))->install($context->getContext());
+        return new CustomFieldSetInstaller($repository);
     }
 
     /**
