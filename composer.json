@@ -42,7 +42,8 @@
             "de-DE": "EU-Gewährleistungslabel (Storefront + Mail-Anhang), GARAN-Garantielabel für Haltbarkeitsgarantien und GPSR-Herstellerangaben — konfigurierbar pro Sales Channel.",
             "en-GB": "EU warranty label (storefront + mail attachment), GARAN guarantee label for durability guarantees and GPSR manufacturer information — configurable per sales channel."
         },
-        "plugin-icon": "src/Resources/config/plugin.png"
+        "plugin-icon": "src/Resources/config/plugin.png",
+        "executeComposerCommands": true
     },
     "config": {
         "allow-plugins": {
