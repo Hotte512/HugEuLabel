@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hug\EuLabel\Tests\Unit\Storefront;
 
 use Hug\EuLabel\Service\GaranLabelService;
+use Hug\EuLabel\Service\GaranPdfGenerator;
 use Hug\EuLabel\Storefront\Controller\GaranLabelController;
 use PHPUnit\Framework\TestCase;
 use Shopware\Core\Content\Product\ProductCollection;
@@ -49,14 +50,75 @@ final class GaranLabelControllerTest extends TestCase
         $controller->label('kein-uuid', 'full', $this->createSalesChannelContext(), new Request());
     }
 
-    private function createController(string $renderedSvg): GaranLabelController
+    public function testDeliversPdfInlineWithSanitizedFileName(): void
     {
+        $controller = $this->createController('<svg/>', '%PDF-1.7 label', 'SW 10/00 "x"');
+
+        $response = $controller->labelPdf(Uuid::randomHex(), $this->createSalesChannelContext(), new Request());
+
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('%PDF-1.7 label', $response->getContent());
+        self::assertSame('application/pdf', $response->headers->get('Content-Type'));
+
+        $disposition = (string) $response->headers->get('Content-Disposition');
+        self::assertStringStartsWith('inline', $disposition);
+        self::assertStringContainsString('garantielabel-SW-10-00-x.pdf', $disposition);
+
+        self::assertStringContainsString('public', (string) $response->headers->get('Cache-Control'));
+        self::assertNotNull($response->getEtag());
+    }
+
+    public function testPdfFileNameFallsBackWhenProductNumberIsUnusable(): void
+    {
+        $controller = $this->createController('<svg/>', '%PDF-1.7', '///');
+
+        $response = $controller->labelPdf(Uuid::randomHex(), $this->createSalesChannelContext(), new Request());
+
+        self::assertStringContainsString('garantielabel.pdf', (string) $response->headers->get('Content-Disposition'));
+    }
+
+    public function testPdfReturns404WhenGenerationFails(): void
+    {
+        $controller = $this->createController('<svg/>', null);
+
+        $this->expectException(NotFoundHttpException::class);
+
+        $controller->labelPdf(Uuid::randomHex(), $this->createSalesChannelContext(), new Request());
+    }
+
+    public function testPdfReturns404WhenNoLabelExists(): void
+    {
+        $controller = $this->createController('', '%PDF-1.7');
+
+        $this->expectException(NotFoundHttpException::class);
+
+        $controller->labelPdf(Uuid::randomHex(), $this->createSalesChannelContext(), new Request());
+    }
+
+    public function testPdfReturns404ForInvalidProductId(): void
+    {
+        $controller = $this->createController('<svg/>', '%PDF-1.7');
+
+        $this->expectException(NotFoundHttpException::class);
+
+        $controller->labelPdf('kein-uuid', $this->createSalesChannelContext(), new Request());
+    }
+
+    private function createController(
+        string $renderedSvg,
+        ?string $renderedPdf = null,
+        string $productNumber = 'SW10000',
+    ): GaranLabelController {
         $service = $this->createMock(GaranLabelService::class);
         $service->method('render')->willReturn($renderedSvg);
+
+        $pdfGenerator = $this->createMock(GaranPdfGenerator::class);
+        $pdfGenerator->method('generate')->willReturn($renderedPdf);
 
         $product = new ProductEntity();
         $product->setId(Uuid::randomHex());
         $product->setUniqueIdentifier($product->getId());
+        $product->setProductNumber($productNumber);
 
         // Sales-Channel-Repository: erzwingt Sichtbarkeit/Aktiv-Status —
         // ein im Kanal unsichtbares Produkt käme hier gar nicht durch.
@@ -65,7 +127,7 @@ final class GaranLabelControllerTest extends TestCase
             new ProductCollection([$product]),
         ]);
 
-        return new GaranLabelController($service, $productRepository);
+        return new GaranLabelController($service, $productRepository, $pdfGenerator);
     }
 
     private function createSalesChannelContext(): SalesChannelContext

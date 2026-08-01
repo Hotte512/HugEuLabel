@@ -74,6 +74,37 @@
                 </option>
             </options>
         </input-field>
+
+        <input-field type="single-select">
+            <name>pdfButtonsMode</name>
+            <label lang="de-DE">PDF-Schaltflächen unter den Labels</label>
+            <label lang="en-GB">PDF buttons below the labels</label>
+            <helpText lang="de-DE">Blendet unter dem Gewährleistungslabel und dem GARAN-Garantielabel dezente Links zum PDF ein. Die Labels selbst bleiben unverändert. Auf welchen Seiten die Schaltflächen erscheinen, steuern die Schalter in den Karten „Produktdetailseite", „Warenkorb &amp; Checkout" und „Garantielabel GARAN".</helpText>
+            <helpText lang="en-GB">Shows discreet links to the PDF below the warranty label and the GARAN guarantee label. The labels themselves remain unchanged. Which pages show the buttons is controlled by the switches in the "Product detail page", "Cart &amp; checkout" and "Guarantee label GARAN" cards.</helpText>
+            <defaultValue>off</defaultValue>
+            <options>
+                <option>
+                    <id>off</id>
+                    <name lang="de-DE">Aus</name>
+                    <name lang="en-GB">Off</name>
+                </option>
+                <option>
+                    <id>download</id>
+                    <name lang="de-DE">Nur „Als PDF herunterladen"</name>
+                    <name lang="en-GB">Download only</name>
+                </option>
+                <option>
+                    <id>new_tab</id>
+                    <name lang="de-DE">Nur „PDF in neuem Tab öffnen"</name>
+                    <name lang="en-GB">Open in new tab only</name>
+                </option>
+                <option>
+                    <id>both</id>
+                    <name lang="de-DE">Beide Schaltflächen</name>
+                    <name lang="en-GB">Both buttons</name>
+                </option>
+            </options>
+        </input-field>
     </card>
 
     <card>
@@ -182,6 +213,15 @@
                     <name lang="en-GB">Into the element (at the end)</name>
                 </option>
             </options>
+        </input-field>
+
+        <input-field type="bool">
+            <name>pdfButtonsPdp</name>
+            <label lang="de-DE">PDF-Schaltflächen auf der Produktdetailseite</label>
+            <label lang="en-GB">PDF buttons on the product detail page</label>
+            <helpText lang="de-DE">Gilt für Gewährleistungs- und GARAN-Label. Nur wirksam, wenn die PDF-Schaltflächen in der Karte „Allgemein" eingeschaltet sind.</helpText>
+            <helpText lang="en-GB">Applies to the warranty and the GARAN label. Only effective if the PDF buttons are enabled in the "General" card.</helpText>
+            <defaultValue>true</defaultValue>
         </input-field>
     </card>
 
@@ -331,6 +371,33 @@
                     <name lang="en-GB">Compact — label header, opens on click</name>
                 </option>
             </options>
+        </input-field>
+
+        <input-field type="bool">
+            <name>pdfButtonsConfirm</name>
+            <label lang="de-DE">PDF-Schaltflächen auf der Bestellabschluss-Seite</label>
+            <label lang="en-GB">PDF buttons on the checkout confirm page</label>
+            <helpText lang="de-DE">Gilt für Gewährleistungs- und GARAN-Label. Nur wirksam, wenn die PDF-Schaltflächen in der Karte „Allgemein" eingeschaltet sind.</helpText>
+            <helpText lang="en-GB">Applies to the warranty and the GARAN label. Only effective if the PDF buttons are enabled in the "General" card.</helpText>
+            <defaultValue>false</defaultValue>
+        </input-field>
+
+        <input-field type="bool">
+            <name>pdfButtonsCart</name>
+            <label lang="de-DE">PDF-Schaltflächen im Warenkorb</label>
+            <label lang="en-GB">PDF buttons in the cart</label>
+            <helpText lang="de-DE">Nur wirksam, wenn die PDF-Schaltflächen in der Karte „Allgemein" eingeschaltet sind.</helpText>
+            <helpText lang="en-GB">Only effective if the PDF buttons are enabled in the "General" card.</helpText>
+            <defaultValue>false</defaultValue>
+        </input-field>
+
+        <input-field type="bool">
+            <name>pdfButtonsOffcanvas</name>
+            <label lang="de-DE">PDF-Schaltflächen im Offcanvas-Warenkorb</label>
+            <label lang="en-GB">PDF buttons in the off-canvas cart</label>
+            <helpText lang="de-DE">Im schmalen Offcanvas-Bereich meist unerwünscht. Nur wirksam, wenn die PDF-Schaltflächen in der Karte „Allgemein" eingeschaltet sind.</helpText>
+            <helpText lang="en-GB">Usually undesirable in the narrow off-canvas area. Only effective if the PDF buttons are enabled in the "General" card.</helpText>
+            <defaultValue>false</defaultValue>
         </input-field>
     </card>
 
@@ -584,6 +651,15 @@
                     <name lang="en-GB">Both</name>
                 </option>
             </options>
+        </input-field>
+
+        <input-field type="bool">
+            <name>garanPdfButtonsListing</name>
+            <label lang="de-DE">PDF-Schaltflächen in der Produktkachel</label>
+            <label lang="en-GB">PDF buttons in the product box</label>
+            <helpText lang="de-DE">Erzeugt je Kachel zwei zusätzliche Links; im Listing meist unerwünscht. Nur wirksam, wenn die PDF-Schaltflächen in der Karte „Allgemein" eingeschaltet sind.</helpText>
+            <helpText lang="en-GB">Adds two extra links per product box; usually undesirable in listings. Only effective if the PDF buttons are enabled in the "General" card.</helpText>
+            <defaultValue>false</defaultValue>
         </input-field>
     </card>
 

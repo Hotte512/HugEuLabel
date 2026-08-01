@@ -16,6 +16,16 @@
             "hideFull": "Hide guarantee label",
             "conditionsLink": "Show full guarantee conditions",
             "alt": "GARAN guarantee label: commercial durability guarantee of the producer"
+        },
+        "pdf": {
+            "download": "Download as PDF",
+            "newTab": "Open PDF in a new tab",
+            "newTabHint": "(opens in a new tab)",
+            "downloadEu": "Download the warranty label as PDF",
+            "newTabEu": "Open the warranty label PDF in a new tab",
+            "downloadGaran": "Download the guarantee label as PDF",
+            "newTabGaran": "Open the guarantee label PDF in a new tab",
+            "euFileName": "EU-warranty-label.pdf"
         }
     }
 }

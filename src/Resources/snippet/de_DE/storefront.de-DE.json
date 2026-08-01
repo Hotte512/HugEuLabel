@@ -16,6 +16,16 @@
             "hideFull": "Garantielabel ausblenden",
             "conditionsLink": "Vollständige Garantiebedingungen anzeigen",
             "alt": "GARAN-Garantielabel: gewerbliche Haltbarkeitsgarantie des Herstellers"
+        },
+        "pdf": {
+            "download": "Als PDF herunterladen",
+            "newTab": "PDF in neuem Tab öffnen",
+            "newTabHint": "(öffnet in einem neuen Tab)",
+            "downloadEu": "Gewährleistungslabel als PDF herunterladen",
+            "newTabEu": "Gewährleistungslabel als PDF in neuem Tab öffnen",
+            "downloadGaran": "Garantielabel als PDF herunterladen",
+            "newTabGaran": "Garantielabel als PDF in neuem Tab öffnen",
+            "euFileName": "EU-Gewaehrleistungslabel.pdf"
         }
     }
 }

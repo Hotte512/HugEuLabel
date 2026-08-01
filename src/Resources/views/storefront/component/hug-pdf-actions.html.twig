@@ -1,0 +1,44 @@
+{# Dezente PDF-Schaltflächen unter einem Label (Gewährleistung oder GARAN).
+
+   Rein additiv: Das Label selbst und seine Rechtstexte bleiben unverändert —
+   die Leiste steht als letztes Geschwister-Element im Label-Wrapper.
+
+   Beide Links zeigen auf dieselbe URL; „Download" erzwingt das Speichern über
+   das download-Attribut (funktioniert same-origin zuverlässig), „Neuer Tab"
+   öffnet den PDF-Viewer des Browsers.
+
+   Parameter (per sw_include "with"):
+     - hugPdfUrl:      fertige URL zum PDF (Pflicht; leer = rendert nichts)
+     - hugPdfShow:     Flächen-Entscheidung des Aufrufers (Pflicht, bool)
+     - hugPdfKind:     'eu' | 'garan' — wählt die label-spezifischen
+                       aria-Labels (Pflicht, sonst stehen auf der PDP zwei
+                       identisch benannte Links im Screenreader)
+     - hugPdfFileName: Wert für das download-Attribut (optional; leer =
+                       bares download, der Server-Dateiname gewinnt)
+     - hugPdfClass:    zusätzliche CSS-Klassen für den Wrapper (optional) #}
+{% set hugPdfMode = config('HugEuLabel.config.pdfButtonsMode') ?: 'off' %}
+{% if hugPdfShow|default(false) and hugPdfMode != 'off' and hugPdfUrl|default('') is not empty %}
+    {% set hugPdfSuffix = hugPdfKind|default('eu') == 'garan' ? 'Garan' : 'Eu' %}
+    <div class="hug-pdf-actions{% if hugPdfClass is defined %} {{ hugPdfClass }}{% endif %}">
+        {% if hugPdfMode in ['download', 'both'] %}
+            <a class="hug-pdf-action"
+               href="{{ hugPdfUrl }}"
+               download{% if hugPdfFileName|default('') is not empty %}="{{ hugPdfFileName }}"{% endif %}
+               aria-label="{{ ('hugEuLabel.pdf.download' ~ hugPdfSuffix)|trans|striptags }}">
+                {% sw_icon 'cloud-download' style { 'size': 'sm' } %}
+                <span>{{ 'hugEuLabel.pdf.download'|trans|sw_sanitize }}</span>
+            </a>
+        {% endif %}
+        {% if hugPdfMode in ['new_tab', 'both'] %}
+            <a class="hug-pdf-action"
+               href="{{ hugPdfUrl }}"
+               target="_blank"
+               rel="noopener"
+               aria-label="{{ ('hugEuLabel.pdf.newTab' ~ hugPdfSuffix)|trans|striptags }}">
+                {% sw_icon 'external' style { 'size': 'sm' } %}
+                <span>{{ 'hugEuLabel.pdf.newTab'|trans|sw_sanitize }}</span>
+                <span class="visually-hidden">{{ 'hugEuLabel.pdf.newTabHint'|trans|sw_sanitize }}</span>
+            </a>
+        {% endif %}
+    </div>
+{% endif %}

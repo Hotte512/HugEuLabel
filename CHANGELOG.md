@@ -6,6 +6,23 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/).
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-08-01
+
+### Hinzugefügt
+
+- Optionale, dezente PDF-Schaltflächen unter dem Gewährleistungs- und dem GARAN-Garantielabel: „Als PDF herunterladen" (Wolken-Icon) und „PDF in neuem Tab öffnen" (Pfeil-Icon). Gesteuert über `pdfButtonsMode` (`off` / `download` / `new_tab` / `both`, Standard `off`); die Flächen schalten `pdfButtonsPdp` (Standard an), `pdfButtonsConfirm`, `pdfButtonsCart`, `pdfButtonsOffcanvas` und `garanPdfButtonsListing` (jeweils Standard aus)
+- Neue Route `frontend.hug_garan.label_pdf` (`/hug-garan-label/{productId}/label.pdf`): erzeugt das GARAN-Label als A4-PDF aus dem Label-SVG (dompdf, `Content-Disposition: inline`, ETag/Cache wie die SVG-Route, Sales-Channel-Sichtbarkeit erzwungen). Das Ergebnis wird inhaltsadressiert gecacht
+- GARAN-PDF: Das Seitenformat richtet sich nach dem Label statt nach A4 — die Seite bekommt das Seitenverhältnis der viewBox plus 5 mm Rand (bei der offiziellen Vorlage 200 × 211 mm), das Label füllt sie randlos aus. Auf A4 gedruckt blieb vorher rund ein Drittel der Seite leer. Die Label-Breite von 190 mm entspricht der druckbaren Breite von A4 hochkant, ein Ausdruck in Originalgröße auf Normalpapier passt also weiterhin
+- GARAN-PDF: Text wird in Helvetica bzw. Helvetica-Bold gesetzt statt im Times-Fallback von php-svg-lib. Die Bibliothek kann die Vorlagenschrift „Inter" nicht laden und reicht den Familiennamen ungeprüft an dompdf weiter, das die Metrikdatei nur über einen absoluten Pfad findet — der Generator setzt diesen Pfad deshalb als `font-family`-Attribut auf den Textelementen (fett anhand der `font-weight`-Angaben der Vorlage)
+
+### Geändert
+
+- SCSS: Die Regel `.hug-garan-label svg, img` ist auf `.hug-garan-nested-banner` und `.hug-garan-full` verengt — sie hätte sonst die Icons der neuen PDF-Leiste auf Containerbreite aufgeblasen (Darstellung der Labels unverändert)
+
+### Behoben
+
+- `extra.executeComposerCommands: true` in der composer.json — ohne das Flag installiert Shopware die Composer-Abhängigkeiten des Plugins nicht, `bacon/bacon-qr-code` fehlt und die QR-Code-Erzeugung des GARAN-Labels schlägt fehl. Die Einstellung existierte bislang nur im veröffentlichten Stand und fehlte im Haupt-Repository
+
 ## [1.4.3] - 2026-07-16
 
 ### Sicherheit

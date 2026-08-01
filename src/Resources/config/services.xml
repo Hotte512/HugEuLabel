@@ -83,9 +83,16 @@
             <tag name="twig.extension"/>
         </service>
 
+        <service id="Hug\EuLabel\Service\GaranPdfGenerator">
+            <argument type="service" id="cache.object"/>
+            <argument type="service" id="logger" on-invalid="null"/>
+            <tag name="monolog.logger" channel="hug_eu_label"/>
+        </service>
+
         <service id="Hug\EuLabel\Storefront\Controller\GaranLabelController" public="true">
             <argument type="service" id="Hug\EuLabel\Service\GaranLabelService"/>
             <argument type="service" id="sales_channel.product.repository"/>
+            <argument type="service" id="Hug\EuLabel\Service\GaranPdfGenerator"/>
             <tag name="controller.service_arguments"/>
         </service>
 

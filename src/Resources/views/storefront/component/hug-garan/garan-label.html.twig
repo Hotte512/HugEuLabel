@@ -19,6 +19,14 @@
     {% set hugGaranNestedWidth = config('HugEuLabel.config.garanNestedWidth') %}
     {% set hugGaranNestedWidth = hugGaranNestedWidth > 0 ? hugGaranNestedWidth : 368 %}
     {% set hugGaranFullUrl = path('frontend.hug_garan.label', { productId: hugGaranProduct.id, variant: 'full' }) %}
+    {# Optionale PDF-Leiste; der Dateiname kommt aus dem Content-Disposition
+       der Route. #}
+    {% set hugGaranPdfUrl = path('frontend.hug_garan.label_pdf', { productId: hugGaranProduct.id }) %}
+    {% set hugGaranPdfShow = {
+        'pdp':     config('HugEuLabel.config.pdfButtonsPdp'),
+        'confirm': config('HugEuLabel.config.pdfButtonsConfirm'),
+        'listing': config('HugEuLabel.config.garanPdfButtonsListing')
+    }[hugGaranSurface]|default(false) %}
     {% if hugGaranMode == 'nested' %}
         {% set hugGaranNestedSvg = hug_garan_label(hugGaranProduct, 'nested', context) %}
         {% if hugGaranNestedSvg %}
@@ -59,6 +67,13 @@
                         {{ 'hugEuLabel.garan.conditionsLink'|trans|sw_sanitize }}
                     </a>
                 {% endif %}
+                {# Nach dem Bedingungs-Link: der Rechtstext bleibt der
+                   prominentere erste Link. #}
+                {% sw_include '@HugEuLabel/storefront/component/hug-pdf-actions.html.twig' with {
+                    hugPdfUrl: hugGaranPdfUrl,
+                    hugPdfShow: hugGaranPdfShow,
+                    hugPdfKind: 'garan'
+                } %}
             </div>
         {% endif %}
     {% else %}
@@ -76,6 +91,11 @@
                    href="{{ hugGaranConditionsUrl }}" target="_blank" rel="noopener">
                     {{ 'hugEuLabel.garan.conditionsLink'|trans|sw_sanitize }}
                 </a>
+                {% sw_include '@HugEuLabel/storefront/component/hug-pdf-actions.html.twig' with {
+                    hugPdfUrl: hugGaranPdfUrl,
+                    hugPdfShow: hugGaranPdfShow,
+                    hugPdfKind: 'garan'
+                } %}
             </div>
         {% endif %}
     {% endif %}

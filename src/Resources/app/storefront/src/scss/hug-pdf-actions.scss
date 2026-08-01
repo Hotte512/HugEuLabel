@@ -1,0 +1,36 @@
+/*
+ * Dezente PDF-Links unter den Labels. Bewusst KEIN .btn: die Leiste soll
+ * optisch schwächer wirken als der GARAN-Bedingungs-Link (Rechtstext) und
+ * das Label selbst nicht konkurrenzieren. Unterstrichen wird erst bei
+ * Hover/Fokus.
+ */
+.hug-pdf-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.375rem;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+}
+
+.hug-pdf-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--hug-pdf-action-color, var(--bs-secondary-color, #6c757d));
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+        color: var(--bs-link-hover-color, #0a58ca);
+        text-decoration: underline;
+    }
+
+    // sw_icon liefert <span class="icon icon-sm"><svg></span>; die Größe an
+    // die Textzeile koppeln, damit die Leiste ruhig bleibt.
+    .icon {
+        width: 1em;
+        height: 1em;
+        flex: 0 0 auto;
+    }
+}

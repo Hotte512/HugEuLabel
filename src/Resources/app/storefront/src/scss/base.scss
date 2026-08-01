@@ -32,12 +32,18 @@
  * offen ist (analog zum Gewährleistungslabel).
  */
 .hug-garan-label {
-    svg,
-    img {
-        display: block;
-        width: 100%;
-        height: auto;
-        background-color: #fff;
+    // Bewusst auf die Label-Container begrenzt: ein pauschales
+    // "svg, img" würde auch die Icons der PDF-Leiste auf Containerbreite
+    // aufblasen.
+    .hug-garan-nested-banner,
+    .hug-garan-full {
+        svg,
+        img {
+            display: block;
+            width: 100%;
+            height: auto;
+            background-color: #fff;
+        }
     }
 
     .hug-garan-nested-banner {
@@ -60,3 +66,6 @@
 
 // GPSR-Pflichtangaben-Block und gemeinsamer Positions-Slot
 @import 'hug-gpsr';
+
+// Optionale PDF-Links unter den Labels
+@import 'hug-pdf-actions';

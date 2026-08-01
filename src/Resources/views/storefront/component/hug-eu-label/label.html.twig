@@ -16,6 +16,17 @@
     {% if hugEuLabelPath %}
         {% set hugEuLabelMaxWidth = config('HugEuLabel.config.maxWidth') %}
         {% set hugEuLabelWidth = hugEuLabelMaxWidth > 0 ? hugEuLabelMaxWidth : 300 %}
+        {# Optionale PDF-Leiste: das Label-PDF liegt als statisches Asset
+           neben dem SVG; fehlt es, bleibt der Pfad null und die Leiste
+           rendert nichts. #}
+        {% set hugEuLabelPdfPath = hug_eu_label_path(context, 'pdf') %}
+        {% set hugEuLabelPdfUrl = hugEuLabelPdfPath ? asset('bundles/hugeulabel/' ~ hugEuLabelPdfPath) : '' %}
+        {% set hugEuLabelPdfShow = {
+            'pdp':       config('HugEuLabel.config.pdfButtonsPdp'),
+            'confirm':   config('HugEuLabel.config.pdfButtonsConfirm'),
+            'cart':      config('HugEuLabel.config.pdfButtonsCart'),
+            'offcanvas': config('HugEuLabel.config.pdfButtonsOffcanvas')
+        }[hugEuLabelSurface]|default(false) %}
         <div class="hug-eu-label{% if hugEuLabelClass is defined %} {{ hugEuLabelClass }}{% endif %}">
             {% if hugEuLabelMode == 'compact' %}
                 {% set hugEuLabelBehavior = config('HugEuLabel.config.compactBehavior') ?: 'collapse' %}
@@ -110,6 +121,16 @@
                     hugEuLabelLazy: hugEuLabelLazy|default(false)
                 } %}
             {% endif %}
+            {# Bewusst außerhalb von Collapse/Modal: die Links sollen auch im
+               zugeklappten Kompakt-Zustand erreichbar bleiben. Als
+               Geschwister-Element bleibt zudem die :has(> .collapse.show)-
+               Regel für das Ausblenden des Banners korrekt. #}
+            {% sw_include '@HugEuLabel/storefront/component/hug-pdf-actions.html.twig' with {
+                hugPdfUrl: hugEuLabelPdfUrl,
+                hugPdfShow: hugEuLabelPdfShow,
+                hugPdfKind: 'eu',
+                hugPdfFileName: 'hugEuLabel.pdf.euFileName'|trans|striptags
+            } %}
         </div>
     {% endif %}
 {% endif %}

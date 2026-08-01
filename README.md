@@ -111,6 +111,27 @@ EU-Original-SVGs — und öffnet das volle Label per Klick, je nach
 | `compactBehavior` | single-select | `collapse` | `collapse` (aufklappen) oder `modal` — gilt überall, wo Kompakt gewählt ist |
 | `compactWidth`    | int           | `300`      | Breite des zugeklappten EU-Label-Kopf-Banners in px |
 | `slotLayout`      | single-select | `stacked`  | Anordnung mehrerer Blöcke am selben Anker: `stacked` / `side_by_side` (Reihenfolge: Gewährleistung, GARAN, GPSR) |
+| `pdfButtonsMode`  | single-select | `off`      | Dezente PDF-Links unter Gewährleistungs- und GARAN-Label: `off`, `download`, `new_tab`, `both` |
+
+Die PDF-Links sind rein additiv — die Labels selbst bleiben unverändert und
+im Modus `full` unmittelbar sichtbar. Wo sie erscheinen, steuern die
+`pdfButtons*`-Schalter der jeweiligen Karte; sie greifen nur, wenn
+`pdfButtonsMode` nicht `off` ist. Das Gewährleistungs-PDF ist die
+lokalisierte Datei aus `Resources/public/labels/`, das GARAN-PDF wird über
+die Route `frontend.hug_garan.label_pdf` aus dem Label-SVG erzeugt.
+
+> **Hinweis zum GARAN-PDF:** Das Seitenformat folgt dem Label (bei der
+> offiziellen Vorlage 200 × 211 mm bei 190 mm Label-Breite), nicht A4 —
+> sonst bliebe ein Drittel der Seite leer. Ein Ausdruck in Originalgröße
+> auf A4 passt trotzdem.
+>
+> Die Umwandlung läuft über dompdf/php-svg-lib.
+> Rahmen, GARAN-Schriftzug, EU-Flagge, QR-Code und die 24 Sprachzeilen
+> liegen als Pfade vor und bleiben originalgetreu. Die drei befüllten
+> Textfelder (Marke, Modell-Kennung, Garantiedauer) werden in Helvetica
+> bzw. Helvetica-Bold gesetzt — php-svg-lib kann die Vorlagenschrift
+> „Inter" nicht laden, ohne diese Substitution fiele es auf Times zurück.
+> Maßgeblich bleibt die Storefront-Darstellung des unveränderten SVGs.
 
 ### Produktdetailseite
 
@@ -120,6 +141,7 @@ EU-Original-SVGs — und öffnet das volle Label per Klick, je nach
 | `pdpPosition`       | single-select | `below_buy_button` | `above_buy_button`, `below_buy_button`, `below_description`, `tab_description_end`, `near_shipping_info`, `page_end`, `custom_selector` |
 | `pdpCustomSelector` | text          | leer               | CSS-Selektor für `custom_selector` (z. B. `.product-detail-price-container`) |
 | `pdpCustomInsert`   | single-select | `after`            | `before`, `after`, `append` |
+| `pdfButtonsPdp`     | bool          | `true`             | PDF-Links auf der PDP (Gewährleistung und GARAN) |
 
 ### Warenkorb & Checkout
 
@@ -131,6 +153,9 @@ EU-Original-SVGs — und öffnet das volle Label per Klick, je nach
 | `confirmCustomInsert`     | single-select | `after`       | `before`, `after`, `append` |
 | `cartMode`                | single-select | `hidden`      | `hidden`, `full`, `compact` |
 | `offcanvasMode`           | single-select | `hidden`      | `hidden`, `full`, `compact` |
+| `pdfButtonsConfirm`       | bool          | `false`       | PDF-Links auf der Bestellabschluss-Seite |
+| `pdfButtonsCart`          | bool          | `false`       | PDF-Links im Warenkorb |
+| `pdfButtonsOffcanvas`     | bool          | `false`       | PDF-Links im Offcanvas-Warenkorb |
 
 Bei `custom_selector` wird das Label unsichtbar gerendert und clientseitig
 an den konfigurierten Selektor verschoben. Wird das Ziel nicht gefunden
@@ -227,6 +252,7 @@ bis 2 Jahre brauchen kein Label und bleiben still.
 | `garanListingMode` | single-select | `hidden` | `hidden`, `nested` (in der Produktkachel) |
 | `garanModelIdSource` | single-select | `product_number` | `product_number`, `manufacturer_number`, `ean` (leer ⇒ Produktnummer) |
 | `garanMailMode` | single-select | `conditions_pdfs` | `disabled`, `conditions_pdfs`, `summary_pdf`, `both` |
+| `garanPdfButtonsListing` | bool | `false` | PDF-Links in der Produktkachel |
 
 ### Mail-Anhänge
 
