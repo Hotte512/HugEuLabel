@@ -6,6 +6,17 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/).
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-09-28
+
+### Hinzugefügt
+
+- Eigene Label-Breiten für Produktdetailseite und Listing, unabhängig von Warenkorb/Checkout: `pdpMaxWidth` (volles EU- und GARAN-Label auf der PDP), `pdpCompactWidth` (EU-Kompakt-Banner auf der PDP), `garanNestedWidthPdp` und `garanNestedWidthListing` (GARAN-Nested-Banner). Leer oder 0 ⇒ die bisherige allgemeine Breite, bestehende Shops sehen also keine Änderung
+- Installation und Update per Composer: `composer require hotte512/hug-eu-label` installiert `bacon/bacon-qr-code` automatisch mit. `.gitattributes` hält Tests und Dev-Konfiguration aus dem Composer-Paket heraus
+
+### Geändert
+
+- Composer-Paketname `hug/eu-label` → `hotte512/hug-eu-label` (der Vendor `hug` ist auf Packagist vergeben). Plugin-Name `HugEuLabel`, PHP-Namespace und Konfigurationsschlüssel bleiben unverändert
+
 ## [1.5.0] - 2026-08-01
 
 ### Hinzugefügt

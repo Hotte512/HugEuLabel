@@ -1,0 +1,16 @@
+# Nicht Teil des Composer-/Packagist-Pakets (git archive / dist-ZIP).
+# Die gebauten Storefront-/Administration-Dateien unter src/ bleiben drin.
+/.github            export-ignore
+/tests              export-ignore
+/bin                export-ignore
+/.eslintrc.json     export-ignore
+/.gitattributes     export-ignore
+/.gitignore         export-ignore
+/babel.config.js    export-ignore
+/ecs.php            export-ignore
+/jest.config.js     export-ignore
+/package.json       export-ignore
+/package-lock.json  export-ignore
+/phpstan.neon       export-ignore
+/phpunit.xml.dist   export-ignore
+/rector.php         export-ignore

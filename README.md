@@ -57,10 +57,35 @@ unabhängig voneinander aktivierbar.
 
 - Shopware ≥ 6.7 (`shopware/core: ~6.7.0`)
 - PHP ≥ 8.2
-- `bacon/bacon-qr-code` ^3.0 im **Shop-Root** (`composer require
-  bacon/bacon-qr-code:^3.0`) — QR-Code-Erzeugung für das GARAN-Label
+- `bacon/bacon-qr-code` ^3.0 — QR-Code-Erzeugung für das GARAN-Label.
+  Bei der Installation per Composer kommt es automatisch mit; nur bei
+  manueller Installation separat im **Shop-Root** installieren.
 
 ## Installation
+
+### Per Composer (empfohlen)
+
+Vom Shopware-Root aus; Abhängigkeiten wie `bacon/bacon-qr-code` werden
+automatisch mitinstalliert:
+
+```bash
+composer require hotte512/hug-eu-label
+bin/console plugin:refresh
+bin/console plugin:install --activate HugEuLabel
+bin/console assets:install
+bin/console cache:clear
+```
+
+**Update:**
+
+```bash
+composer update hotte512/hug-eu-label
+bin/console plugin:update HugEuLabel
+bin/console assets:install
+bin/console cache:clear
+```
+
+### Manuell
 
 Das Plugin-Verzeichnis nach `custom/plugins/HugEuLabel` kopieren (bzw. dort
 klonen), dann vom Shopware-Root aus:
@@ -107,9 +132,9 @@ EU-Original-SVGs — und öffnet das volle Label per Klick, je nach
 | Schlüssel         | Typ           | Standard   | Beschreibung |
 |-------------------|---------------|------------|--------------|
 | `active`          | bool          | `true`     | Plugin global aktiv/inaktiv |
-| `maxWidth`        | int           | `300`      | Maximale Label-Breite in px (nur proportionale Skalierung) |
+| `maxWidth`        | int           | `300`      | Maximale Label-Breite in px (nur proportionale Skalierung); gilt für Warenkorb/Checkout und als Standard für die PDP |
 | `compactBehavior` | single-select | `collapse` | `collapse` (aufklappen) oder `modal` — gilt überall, wo Kompakt gewählt ist |
-| `compactWidth`    | int           | `300`      | Breite des zugeklappten EU-Label-Kopf-Banners in px |
+| `compactWidth`    | int           | `300`      | Breite des zugeklappten EU-Label-Kopf-Banners in px (Standard für alle Flächen) |
 | `slotLayout`      | single-select | `stacked`  | Anordnung mehrerer Blöcke am selben Anker: `stacked` / `side_by_side` (Reihenfolge: Gewährleistung, GARAN, GPSR) |
 | `pdfButtonsMode`  | single-select | `off`      | Dezente PDF-Links unter Gewährleistungs- und GARAN-Label: `off`, `download`, `new_tab`, `both` |
 
@@ -142,6 +167,22 @@ die Route `frontend.hug_garan.label_pdf` aus dem Label-SVG erzeugt.
 | `pdpCustomSelector` | text          | leer               | CSS-Selektor für `custom_selector` (z. B. `.product-detail-price-container`) |
 | `pdpCustomInsert`   | single-select | `after`            | `before`, `after`, `append` |
 | `pdfButtonsPdp`     | bool          | `true`             | PDF-Links auf der PDP (Gewährleistung und GARAN) |
+| `pdpMaxWidth`       | int           | leer               | Eigene Label-Breite in px auf der PDP (volles EU- und GARAN-Label); leer/0 ⇒ `maxWidth` |
+| `pdpCompactWidth`   | int           | leer               | Eigene Kompakt-Banner-Breite in px auf der PDP; leer/0 ⇒ `compactWidth` |
+
+#### Breiten pro Fläche
+
+| Fläche | EU-Label | GARAN voll | GARAN Nested |
+|---|---|---|---|
+| Produktdetailseite | `pdpMaxWidth` → `maxWidth` → 300 | `pdpMaxWidth` → `maxWidth` → 300 | `garanNestedWidthPdp` → `garanNestedWidth` → 368 |
+| Listing | — | — | `garanNestedWidthListing` → `garanNestedWidth` → 368 |
+| Warenkorb / Checkout | `maxWidth` → 300 | `maxWidth` → 300 | `garanNestedWidth` → 368 |
+
+Eine feste Mindest- oder Pixelgröße schreibt die DVO (EU) 2025/1960 nicht
+vor, auch nicht „im Checkout größer". Auf PDP und Bestellabschluss gilt
+dieselbe Anforderung: vollständig, unmittelbar sichtbar, farbig und
+**lesbar**. Die Breiten werden deshalb nicht nach unten begrenzt; wählen
+Sie sie so, dass der Label-Text gut lesbar bleibt.
 
 ### Warenkorb & Checkout
 
@@ -247,7 +288,8 @@ bis 2 Jahre brauchen kein Label und bleiben still.
 | `garanPdpMode` | single-select | `full` | `hidden`, `full`, `nested` (aufklappbar) |
 | `garanPdpPosition` | single-select | `below_buy_button` | wie `pdpPosition` inkl. `custom_selector` |
 | `garanPdpCustomSelector` / `garanPdpCustomInsert` | text / select | leer / `after` | eigener Selektor, unabhängig vom EU-Label |
-| `garanNestedWidth` | int | `368` | Breite des Nested-Banners in px |
+| `garanNestedWidth` | int | `368` | Breite des Nested-Banners in px (Standard für alle Flächen) |
+| `garanNestedWidthPdp` / `garanNestedWidthListing` | int | leer | Eigene Nested-Breite auf PDP bzw. im Listing; leer/0 ⇒ `garanNestedWidth` |
 | `garanConfirmMode` | single-select | `nested` | `hidden`, `nested` (pro Bestellposition) |
 | `garanListingMode` | single-select | `hidden` | `hidden`, `nested` (in der Produktkachel) |
 | `garanModelIdSource` | single-select | `product_number` | `product_number`, `manufacturer_number`, `ean` (leer ⇒ Produktnummer) |
