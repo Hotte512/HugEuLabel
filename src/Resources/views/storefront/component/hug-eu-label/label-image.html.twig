@@ -3,8 +3,10 @@
      - hugEuLabelLazy:      true = loading="lazy"
      - hugEuLabelFullWidth: true = volle Breite des Containers statt der
                             konfigurierten maxWidth (für das Modal, wo die
-                            Seiten-Breitenbegrenzung keinen Sinn ergibt) #}
-{% set hugEuLabelMaxWidth = config('HugEuLabel.config.maxWidth') %}
+                            Seiten-Breitenbegrenzung keinen Sinn ergibt)
+     - hugEuLabelWidth:     bereits pro Fläche aufgelöste Breite in px
+                            (label.html.twig); fehlt sie, gilt maxWidth #}
+{% set hugEuLabelMaxWidth = hugEuLabelWidth|default(0) > 0 ? hugEuLabelWidth : config('HugEuLabel.config.maxWidth') %}
 {# background-color: Das EU-Original-SVG hat keinen gemalten Hintergrund;
    ohne weißen Grund scheint dahinterliegender Seiteninhalt durch. #}
 <img src="{{ asset('bundles/hugeulabel/' ~ hugEuLabelPath) }}"

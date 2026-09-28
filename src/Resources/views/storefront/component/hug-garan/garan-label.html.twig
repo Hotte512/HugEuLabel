@@ -16,7 +16,13 @@
    anzeigepflichtige Garantie hat. #}
 {% if config('HugEuLabel.config.garanEnabled') %}
     {% set hugGaranConditionsUrl = hug_garan_conditions_url(hugGaranProduct, context) %}
-    {% set hugGaranNestedWidth = config('HugEuLabel.config.garanNestedWidth') %}
+    {# Nested-Breite: PDP und Listing optional mit eigenem Wert, sonst die
+       allgemeine garanNestedWidth, sonst 368. #}
+    {% set hugGaranNestedWidth = {
+        'pdp':     config('HugEuLabel.config.garanNestedWidthPdp'),
+        'listing': config('HugEuLabel.config.garanNestedWidthListing')
+    }[hugGaranSurface]|default(0) %}
+    {% set hugGaranNestedWidth = hugGaranNestedWidth > 0 ? hugGaranNestedWidth : config('HugEuLabel.config.garanNestedWidth') %}
     {% set hugGaranNestedWidth = hugGaranNestedWidth > 0 ? hugGaranNestedWidth : 368 %}
     {% set hugGaranFullUrl = path('frontend.hug_garan.label', { productId: hugGaranProduct.id, variant: 'full' }) %}
     {# Optionale PDF-Leiste; der Dateiname kommt aus dem Content-Disposition
@@ -80,7 +86,8 @@
         {# Existenz-Check serverseitig über den Resolver (conditionsUrl ist
            genau dann gesetzt, wenn ein Label anzuzeigen ist). #}
         {% if hugGaranConditionsUrl %}
-            {% set hugGaranMaxWidth = config('HugEuLabel.config.maxWidth') %}
+            {% set hugGaranMaxWidth = hugGaranSurface == 'pdp' ? config('HugEuLabel.config.pdpMaxWidth') : 0 %}
+            {% set hugGaranMaxWidth = hugGaranMaxWidth > 0 ? hugGaranMaxWidth : config('HugEuLabel.config.maxWidth') %}
             <div class="hug-garan-label hug-garan-label-{{ hugGaranSurface }}">
                 <div class="hug-garan-full" style="max-width: {{ hugGaranMaxWidth > 0 ? hugGaranMaxWidth : 300 }}px">
                     <img src="{{ hugGaranFullUrl }}"
