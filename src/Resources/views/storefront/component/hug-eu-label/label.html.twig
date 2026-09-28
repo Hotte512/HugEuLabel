@@ -14,8 +14,12 @@
 {% if config('HugEuLabel.config.active') %}
     {% set hugEuLabelPath = hug_eu_label_path(context) %}
     {% if hugEuLabelPath %}
+        {# Breite: auf der PDP optional eigener Wert, sonst die allgemeine
+           maxWidth (gilt für Warenkorb/Checkout), sonst 300. #}
         {% set hugEuLabelMaxWidth = config('HugEuLabel.config.maxWidth') %}
         {% set hugEuLabelWidth = hugEuLabelMaxWidth > 0 ? hugEuLabelMaxWidth : 300 %}
+        {% set hugEuLabelPdpWidth = hugEuLabelSurface == 'pdp' ? config('HugEuLabel.config.pdpMaxWidth') : 0 %}
+        {% set hugEuLabelWidth = hugEuLabelPdpWidth > 0 ? hugEuLabelPdpWidth : hugEuLabelWidth %}
         {# Optionale PDF-Leiste: das Label-PDF liegt als statisches Asset
            neben dem SVG; fehlt es, bleibt der Pfad null und die Leiste
            rendert nichts. #}
@@ -34,7 +38,8 @@
                 {# Banner = oberer Streifen des UNVERÄNDERTEN Original-SVGs,
                    rein per CSS zugeschnitten (Seitenverhältnis 595:142 ≈
                    obere 17 % der A4-Seite = blauer Label-Kopf). #}
-                {% set hugEuLabelCompactWidth = config('HugEuLabel.config.compactWidth') %}
+                {% set hugEuLabelCompactWidth = hugEuLabelSurface == 'pdp' ? config('HugEuLabel.config.pdpCompactWidth') : 0 %}
+                {% set hugEuLabelCompactWidth = hugEuLabelCompactWidth > 0 ? hugEuLabelCompactWidth : config('HugEuLabel.config.compactWidth') %}
                 {% set hugEuLabelCompactWidth = hugEuLabelCompactWidth > 0 ? hugEuLabelCompactWidth : hugEuLabelWidth %}
                 <button type="button"
                         class="hug-eu-label-compact-banner border-0 p-0 d-block"
@@ -110,7 +115,8 @@
                                 aria-label="{{ 'hugEuLabel.label.hideFull'|trans|striptags }}">
                             {% sw_include '@HugEuLabel/storefront/component/hug-eu-label/label-image.html.twig' with {
                                 hugEuLabelPath: hugEuLabelPath,
-                                hugEuLabelLazy: true
+                                hugEuLabelLazy: true,
+                                hugEuLabelWidth: hugEuLabelWidth
                             } %}
                         </button>
                     </div>
@@ -118,7 +124,8 @@
             {% else %}
                 {% sw_include '@HugEuLabel/storefront/component/hug-eu-label/label-image.html.twig' with {
                     hugEuLabelPath: hugEuLabelPath,
-                    hugEuLabelLazy: hugEuLabelLazy|default(false)
+                    hugEuLabelLazy: hugEuLabelLazy|default(false),
+                    hugEuLabelWidth: hugEuLabelWidth
                 } %}
             {% endif %}
             {# Bewusst außerhalb von Collapse/Modal: die Links sollen auch im

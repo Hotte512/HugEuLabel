@@ -19,8 +19,8 @@
             <name>maxWidth</name>
             <label lang="de-DE">Maximale Breite des Labels (px)</label>
             <label lang="en-GB">Maximum label width (px)</label>
-            <helpText lang="de-DE">Maximale Darstellungsbreite des Gewährleistungslabels in der Storefront in Pixeln. Das Label wird nur proportional skaliert.</helpText>
-            <helpText lang="en-GB">Maximum display width of the warranty label in the storefront in pixels. The label is only scaled proportionally.</helpText>
+            <helpText lang="de-DE">Maximale Darstellungsbreite des Gewährleistungslabels (und des vollen GARAN-Labels) in der Storefront in Pixeln. Gilt für Warenkorb und Checkout sowie als Standard für die Produktdetailseite, die sich dort separat einstellen lässt. Das Label wird nur proportional skaliert.</helpText>
+            <helpText lang="en-GB">Maximum display width of the warranty label (and of the full GARAN label) in the storefront in pixels. Applies to cart and checkout and serves as the default for the product detail page, which can be set separately there. The label is only scaled proportionally.</helpText>
             <defaultValue>300</defaultValue>
         </input-field>
 
@@ -28,8 +28,8 @@
             <name>compactWidth</name>
             <label lang="de-DE">Breite des zugeklappten Kompakt-Banners (px)</label>
             <label lang="en-GB">Width of the collapsed compact banner (px)</label>
-            <helpText lang="de-DE">Breite des Label-Kopf-Banners in der Kompakt-Darstellung des Gewährleistungslabels.</helpText>
-            <helpText lang="en-GB">Width of the label header banner in the warranty label's compact display.</helpText>
+            <helpText lang="de-DE">Breite des Label-Kopf-Banners in der Kompakt-Darstellung des Gewährleistungslabels. Standard für alle Flächen; die Produktdetailseite lässt sich separat einstellen.</helpText>
+            <helpText lang="en-GB">Width of the label header banner in the warranty label's compact display. Default for all surfaces; the product detail page can be set separately.</helpText>
             <defaultValue>300</defaultValue>
         </input-field>
 
@@ -135,6 +135,22 @@
                     <name lang="en-GB">Compact — label header, opens on click (own risk)</name>
                 </option>
             </options>
+        </input-field>
+
+        <input-field type="int">
+            <name>pdpMaxWidth</name>
+            <label lang="de-DE">Breite des Labels auf der Produktdetailseite (px)</label>
+            <label lang="en-GB">Label width on the product detail page (px)</label>
+            <helpText lang="de-DE">Leer oder 0 = allgemeine „Maximale Breite des Labels". Gilt für das volle Gewährleistungslabel und das volle GARAN-Label auf der Produktdetailseite; Warenkorb und Checkout bleiben unverändert. Das Label wird nur proportional skaliert und muss vollständig lesbar bleiben.</helpText>
+            <helpText lang="en-GB">Empty or 0 = general "Maximum label width". Applies to the full warranty label and the full GARAN label on the product detail page; cart and checkout stay unchanged. The label is only scaled proportionally and must remain fully legible.</helpText>
+        </input-field>
+
+        <input-field type="int">
+            <name>pdpCompactWidth</name>
+            <label lang="de-DE">Breite des Kompakt-Banners auf der Produktdetailseite (px)</label>
+            <label lang="en-GB">Compact banner width on the product detail page (px)</label>
+            <helpText lang="de-DE">Leer oder 0 = allgemeine „Breite des zugeklappten Kompakt-Banners". Nur relevant für die Kompakt-Darstellung.</helpText>
+            <helpText lang="en-GB">Empty or 0 = general "Width of the collapsed compact banner". Only relevant for the compact display.</helpText>
         </input-field>
 
         <input-field type="single-select">
@@ -473,9 +489,25 @@
             <name>garanNestedWidth</name>
             <label lang="de-DE">Breite des Nested-Banners (px)</label>
             <label lang="en-GB">Width of the nested banner (px)</label>
-            <helpText lang="de-DE">Breite der kompakten Nested-Variante des GARAN-Labels (PDP, Bestellabschluss, Listing).</helpText>
-            <helpText lang="en-GB">Width of the compact nested variant of the GARAN label (PDP, checkout confirm, listing).</helpText>
+            <helpText lang="de-DE">Breite der kompakten Nested-Variante des GARAN-Labels (PDP, Bestellabschluss, Listing). Produktdetailseite und Listing lassen sich separat einstellen.</helpText>
+            <helpText lang="en-GB">Width of the compact nested variant of the GARAN label (PDP, checkout confirm, listing). Product detail page and listing can be set separately.</helpText>
             <defaultValue>368</defaultValue>
+        </input-field>
+
+        <input-field type="int">
+            <name>garanNestedWidthPdp</name>
+            <label lang="de-DE">Breite des Nested-Banners auf der Produktdetailseite (px)</label>
+            <label lang="en-GB">Nested banner width on the product detail page (px)</label>
+            <helpText lang="de-DE">Leer oder 0 = allgemeine „Breite des Nested-Banners". Das Label wird nur proportional skaliert und muss lesbar bleiben.</helpText>
+            <helpText lang="en-GB">Empty or 0 = general "Width of the nested banner". The label is only scaled proportionally and must remain legible.</helpText>
+        </input-field>
+
+        <input-field type="int">
+            <name>garanNestedWidthListing</name>
+            <label lang="de-DE">Breite des Nested-Banners im Listing (px)</label>
+            <label lang="en-GB">Nested banner width in the listing (px)</label>
+            <helpText lang="de-DE">Leer oder 0 = allgemeine „Breite des Nested-Banners". Das Label wird nur proportional skaliert und muss lesbar bleiben.</helpText>
+            <helpText lang="en-GB">Empty or 0 = general "Width of the nested banner". The label is only scaled proportionally and must remain legible.</helpText>
         </input-field>
 
         <input-field type="single-select">
