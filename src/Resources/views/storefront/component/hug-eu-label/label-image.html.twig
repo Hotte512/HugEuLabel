@@ -8,9 +8,12 @@
                             (label.html.twig); fehlt sie, gilt maxWidth #}
 {% set hugEuLabelMaxWidth = hugEuLabelWidth|default(0) > 0 ? hugEuLabelWidth : config('HugEuLabel.config.maxWidth') %}
 {# background-color: Das EU-Original-SVG hat keinen gemalten Hintergrund;
-   ohne weißen Grund scheint dahinterliegender Seiteninhalt durch. #}
+   ohne weißen Grund scheint dahinterliegender Seiteninhalt durch.
+   max-width per min(): das Inline-max-width überschreibt das
+   max-width: 100% von .img-fluid — ohne die 100 % ragt das Label (595px
+   Eigenbreite) bei maxWidth > Containerbreite über den Rand (mobil). #}
 <img src="{{ asset('bundles/hugeulabel/' ~ hugEuLabelPath) }}"
      class="hug-eu-label-img img-fluid"
-     style="{% if hugEuLabelFullWidth|default(false) %}width: 100%{% else %}max-width: {{ hugEuLabelMaxWidth > 0 ? hugEuLabelMaxWidth : 300 }}px{% endif %}; background-color: #fff"
+     style="{% if hugEuLabelFullWidth|default(false) %}width: 100%{% else %}max-width: min(100%, {{ hugEuLabelMaxWidth > 0 ? hugEuLabelMaxWidth : 300 }}px){% endif %}; background-color: #fff"
      alt="{{ 'hugEuLabel.label.alt'|trans|striptags }}"
      loading="{{ hugEuLabelLazy|default(false) ? 'lazy' : 'eager' }}">

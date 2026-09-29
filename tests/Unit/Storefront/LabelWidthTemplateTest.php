@@ -39,7 +39,7 @@ final class LabelWidthTemplateTest extends TestCase
 
     public function testPdpUsesGlobalWidthWithoutOverride(): void
     {
-        self::assertStringContainsString('max-width: 400px', $this->renderEu('full', 'pdp'));
+        self::assertStringContainsString('max-width: min(100%, 400px)', $this->renderEu('full', 'pdp'));
     }
 
     public function testPdpOverrideAppliesOnlyToPdp(): void
@@ -47,25 +47,25 @@ final class LabelWidthTemplateTest extends TestCase
         $this->config['HugEuLabel.config.pdpMaxWidth'] = 220;
 
         $pdp = $this->renderEu('full', 'pdp');
-        self::assertStringContainsString('max-width: 220px', $pdp);
-        self::assertStringNotContainsString('max-width: 400px', $pdp);
+        self::assertStringContainsString('max-width: min(100%, 220px)', $pdp);
+        self::assertStringNotContainsString('max-width: min(100%, 400px)', $pdp);
 
-        self::assertStringContainsString('max-width: 400px', $this->renderEu('full', 'confirm'));
-        self::assertStringContainsString('max-width: 400px', $this->renderEu('full', 'cart'));
+        self::assertStringContainsString('max-width: min(100%, 400px)', $this->renderEu('full', 'confirm'));
+        self::assertStringContainsString('max-width: min(100%, 400px)', $this->renderEu('full', 'cart'));
     }
 
     public function testZeroOverrideFallsBackToGlobalWidth(): void
     {
         $this->config['HugEuLabel.config.pdpMaxWidth'] = 0;
 
-        self::assertStringContainsString('max-width: 400px', $this->renderEu('full', 'pdp'));
+        self::assertStringContainsString('max-width: min(100%, 400px)', $this->renderEu('full', 'pdp'));
     }
 
     public function testMissingGlobalWidthFallsBackTo300(): void
     {
         unset($this->config['HugEuLabel.config.maxWidth']);
 
-        self::assertStringContainsString('max-width: 300px', $this->renderEu('full', 'confirm'));
+        self::assertStringContainsString('max-width: min(100%, 300px)', $this->renderEu('full', 'confirm'));
     }
 
     public function testPdpCompactOverride(): void
@@ -76,7 +76,7 @@ final class LabelWidthTemplateTest extends TestCase
         $pdp = $this->renderEu('compact', 'pdp');
         self::assertStringContainsString('max-width: 250px; width: 100%; aspect-ratio', $pdp);
         // Das aufgeklappte volle Label nutzt die PDP-Breite.
-        self::assertStringContainsString('max-width: 220px', $pdp);
+        self::assertStringContainsString('max-width: min(100%, 220px)', $pdp);
 
         self::assertStringContainsString('max-width: 350px; width: 100%; aspect-ratio', $this->renderEu('compact', 'confirm'));
     }

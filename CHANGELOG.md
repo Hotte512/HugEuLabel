@@ -6,6 +6,12 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/).
 
 ## [Unreleased]
 
+## [1.6.1] - 2026-09-29
+
+### Behoben
+
+- Gewährleistungslabel ragte auf schmalen Viewports über den Container hinaus (z. B. Checkout-Bestätigung bei 390 px: 595 px breit, waagerechtes Scrollen), sobald `maxWidth` größer als die Containerbreite war — das Inline-`max-width` überschrieb das `max-width: 100%` von `.img-fluid`. Jetzt `max-width: min(100%, <maxWidth>px)`; auf dem Desktop unverändert
+
 ## [1.6.0] - 2026-09-28
 
 ### Hinzugefügt

@@ -78,7 +78,9 @@ final class GaranPdfGeneratorTest extends TestCase
         self::assertSame(1, preg_match_all('#/Type\s*/Page[^s]#', $pdf), 'PDF muss einseitig sein');
 
         self::assertSame(1, preg_match('#/MediaBox\s*\[([^\]]+)\]#', $pdf, $box));
-        [, , $width, $height] = preg_split('/\s+/', trim($box[1])) ?: [];
+        $mediaBox = preg_split('/\s+/', trim($box[1] ?? '')) ?: [];
+        self::assertCount(4, $mediaBox, 'MediaBox muss vier Werte haben');
+        [, , $width, $height] = $mediaBox;
 
         // 190 mm Label + 2 × 5 mm Rand, Höhe entsprechend plus 1 mm Puffer.
         self::assertEqualsWithDelta(200.0, (float) $width * 25.4 / 72, 0.5);

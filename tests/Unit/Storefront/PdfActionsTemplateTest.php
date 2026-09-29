@@ -168,7 +168,7 @@ final class PdfActionsTemplateTest extends TestCase
      */
     private function createIconTokenParser(): AbstractTokenParser
     {
-        return new class extends AbstractTokenParser {
+        return new class() extends AbstractTokenParser {
             public function parse(Token $token): Node
             {
                 $name = $this->parser->parseExpression();
