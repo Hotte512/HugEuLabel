@@ -6,6 +6,13 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/).
 
 ## [Unreleased]
 
+## [1.6.2] - 2026-11-12
+
+### Behoben
+
+- GARAN-Label fehlte in Shops mit mehreren Sprachen außerhalb der Standardsprache (z. B. auf englischen Produktseiten), wenn die GARAN-Angaben an Produkt oder Hersteller nur in der Standardsprache gepflegt waren. Die Zusatzfelder werden jetzt in der übersetzten Fassung mit Sprach-Fallback gelesen, wie bei den GPSR-Herstellerangaben. Gilt auch für den GARAN-Anhang der Bestellmail. Danke an @YukiKinimoto für die Meldung (#2)
+- Folge davon: „Garantielabel für dieses Produkt deaktivieren“ wirkt jetzt in allen Sprachen, wenn es nur in der Standardsprache gesetzt ist. Bisher griff es dort nicht. Ein in einer Sprache ausdrücklich gesetzter Wert hat weiterhin Vorrang
+
 ## [1.6.1] - 2026-09-29
 
 ### Behoben

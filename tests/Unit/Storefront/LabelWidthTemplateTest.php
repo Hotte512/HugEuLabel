@@ -6,12 +6,14 @@ namespace Hug\EuLabel\Tests\Unit\Storefront;
 
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
+use Twig\Extension\AbstractExtension;
 use Twig\Loader\FilesystemLoader;
 use Twig\Node\Node;
 use Twig\Node\TextNode;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
 use Twig\TokenParser\IncludeTokenParser;
+use Twig\TokenParser\TokenParserInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
@@ -129,7 +131,7 @@ final class LabelWidthTemplateTest extends TestCase
     {
         return $this->twig()->render(self::GARAN_LABEL, [
             'context' => null,
-            'hugGaranProduct' => new class {
+            'hugGaranProduct' => new class() {
                 public string $id = 'p1';
             },
             'hugGaranMode' => $mode,
@@ -143,13 +145,25 @@ final class LabelWidthTemplateTest extends TestCase
         $loader->addPath(\dirname(__DIR__, 3) . '/src/Resources/views', 'HugEuLabel');
 
         $twig = new Environment($loader, ['strict_variables' => false]);
-        $twig->addTokenParser(new class extends IncludeTokenParser {
-            public function getTag(): string
+        // Stubs als eigene Extension registrieren, nicht per addTokenParser():
+        // Twig benennt kompilierte Template-Klassen nach Template-Pfad und den
+        // Klassennamen der Extensions, per addTokenParser() registrierte Parser
+        // fließen dort nicht ein. Rendern zwei Tests dasselbe Template mit
+        // verschiedenen Stubs, gewinnt sonst prozessweit, wer zuerst kompiliert.
+        // Die anonyme Klasse trägt Datei und Zeile im Namen und trennt sie.
+        $twig->addExtension(new class([$this->createIncludeTokenParser(), $this->createIconTokenParser()]) extends AbstractExtension {
+            /**
+             * @param list<TokenParserInterface> $stubParsers
+             */
+            public function __construct(private readonly array $stubParsers)
             {
-                return 'sw_include';
+            }
+
+            public function getTokenParsers(): array
+            {
+                return $this->stubParsers;
             }
         });
-        $twig->addTokenParser($this->createIconTokenParser());
         $twig->addFunction(new TwigFunction('config', fn (string $key): mixed => $this->config[$key] ?? null));
         $twig->addFunction(new TwigFunction('hug_eu_label_path', static fn (mixed $context, string $type = 'svg'): ?string => $type === 'svg' ? 'labels/de-DE/gewaehrleistungslabel.svg' : null));
         $twig->addFunction(new TwigFunction('asset', static fn (string $path): string => '/' . $path));
@@ -163,12 +177,25 @@ final class LabelWidthTemplateTest extends TestCase
     }
 
     /**
+     * Bildet {% sw_include %} auf das native include ab.
+     */
+    private function createIncludeTokenParser(): IncludeTokenParser
+    {
+        return new class() extends IncludeTokenParser {
+            public function getTag(): string
+            {
+                return 'sw_include';
+            }
+        };
+    }
+
+    /**
      * Verwirft {% sw_icon … %} — die PDF-Leiste ist hier nicht Gegenstand
      * (PdfActionsTemplateTest deckt sie ab).
      */
     private function createIconTokenParser(): AbstractTokenParser
     {
-        return new class extends AbstractTokenParser {
+        return new class() extends AbstractTokenParser {
             public function parse(Token $token): Node
             {
                 $this->parser->parseExpression();

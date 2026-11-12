@@ -9,6 +9,7 @@ use Shopware\Core\Content\Product\Aggregate\ProductManufacturer\ProductManufactu
 use Shopware\Core\Content\Product\Aggregate\ProductManufacturer\ProductManufacturerEntity;
 use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Framework\Context;
+use Shopware\Core\Framework\DataAbstractionLayer\Entity;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
@@ -50,7 +51,7 @@ class GaranDataResolver
     {
         $context = $context instanceof SalesChannelContext ? $context->getContext() : $context;
 
-        $productFields = $product->getCustomFields() ?? [];
+        $productFields = $this->customFieldsOf($product);
         if ($productFields[self::FIELD_DISABLED] ?? false) {
             return null;
         }
@@ -59,7 +60,7 @@ class GaranDataResolver
         // dann wird der Hersteller (per Request gecacht) nachgeladen.
         $manufacturer = $product->getManufacturer()
             ?? $this->loadManufacturer($product->getManufacturerId(), $context);
-        $manufacturerFields = $manufacturer?->getCustomFields() ?? [];
+        $manufacturerFields = $manufacturer !== null ? $this->customFieldsOf($manufacturer) : [];
         $manufacturerActive = (bool) ($manufacturerFields[self::FIELD_ACTIVE] ?? false);
 
         // Hersteller-Defaults zählen nur bei aktivem Hersteller; Produkt-Werte immer.
@@ -139,6 +140,26 @@ class GaranDataResolver
             ->search(new Criteria([$manufacturerId]), $context)
             ->getEntities()
             ->first();
+    }
+
+    /**
+     * customFields sind übersetzt: getCustomFields() enthält nur die Werte der
+     * aktiven Sprache, die übersetzte Fassung dagegen feldweise zusammengeführt
+     * mit Fallback- und Standardsprache. GARAN-Daten werden meist nur in der
+     * Standardsprache gepflegt und fehlten sonst in jedem Fremdsprachen-Shop.
+     *
+     * @return array<string, mixed>
+     */
+    private function customFieldsOf(Entity $entity): array
+    {
+        $translated = $entity->getTranslation('customFields');
+        if (\is_array($translated)) {
+            return $translated;
+        }
+
+        $raw = $entity->get('customFields');
+
+        return \is_array($raw) ? $raw : [];
     }
 
     private function hasSafeScheme(string $url): bool

@@ -244,6 +244,51 @@ final class GaranDataResolverTest extends TestCase
         self::assertSame('mailto:garantie@example.com', $data->conditionsUrl);
     }
 
+    public function testUsesTranslatedCustomFieldsInNonDefaultLanguage(): void
+    {
+        // Fremdsprache ohne eigene GARAN-Werte: Die Rohfelder der aktiven
+        // Sprache sind leer bzw. enthalten nur fremde Felder; erst die
+        // übersetzte Fassung (mit Fallback auf die Standardsprache) trägt die Daten.
+        $manufacturer = $this->createManufacturer(['other_plugin_field' => 'x']);
+        $manufacturer->addTranslated('customFields', ['other_plugin_field' => 'x', 'hug_garan_active' => true, 'hug_garan_duration_years' => 5, 'hug_garan_conditions_url' => 'https://example.com/garantie']);
+
+        $product = $this->createProduct(manufacturer: $manufacturer);
+        $product->addTranslated('customFields', ['hug_garan_product_duration_years' => 10]);
+
+        $data = $this->createResolver()->resolve($product, $this->context);
+
+        self::assertNotNull($data);
+        self::assertSame(10, $data->durationYears);
+        self::assertSame('https://example.com/garantie', $data->conditionsUrl);
+    }
+
+    public function testTranslatedCustomFieldsTakePrecedenceOverRawValues(): void
+    {
+        // Die übersetzte Fassung ist bereits feldweise zusammengeführt und
+        // gewinnt komplett — kein Mischen mit den Rohwerten der Sprache.
+        $manufacturer = $this->createManufacturer(['hug_garan_active' => true, 'hug_garan_duration_years' => 1, 'hug_garan_conditions_url' => 'https://example.com/roh']);
+        $manufacturer->addTranslated('customFields', ['hug_garan_active' => true, 'hug_garan_duration_years' => 5, 'hug_garan_conditions_url' => 'https://example.com/garantie']);
+
+        $product = $this->createProduct(customFields: ['hug_garan_disabled' => true], manufacturer: $manufacturer);
+        $product->addTranslated('customFields', ['hug_garan_disabled' => false]);
+
+        $data = $this->createResolver()->resolve($product, $this->context);
+
+        self::assertNotNull($data);
+        self::assertSame(5, $data->durationYears);
+        self::assertSame('https://example.com/garantie', $data->conditionsUrl);
+    }
+
+    public function testTranslatedDisabledFlagSuppressesLabel(): void
+    {
+        $product = $this->createProduct(
+            manufacturer: $this->createManufacturer(['hug_garan_active' => true, 'hug_garan_duration_years' => 5, 'hug_garan_conditions_url' => 'https://example.com/garantie']),
+        );
+        $product->addTranslated('customFields', ['hug_garan_disabled' => true]);
+
+        self::assertNull($this->createResolver()->resolve($product, $this->context));
+    }
+
     /**
      * @param EntityRepository<ProductManufacturerCollection>|null $manufacturerRepository
      */

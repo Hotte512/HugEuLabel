@@ -274,6 +274,11 @@ Am **Hersteller** (Zusatzfelder-Set „GARAN-Garantie (Hersteller-Standard)"):
 als Overrides — damit kann ein Produkt abweichen oder auch ohne
 Hersteller-Garantie eigene Garantiedaten tragen.
 
+**Mehrsprachige Shops:** Zusatzfelder sind in Shopware übersetzbar. Es genügt,
+die GARAN-Felder in der Standardsprache zu pflegen; andere Sprachen fallen
+feldweise darauf zurück. Ein in einer Sprache ausdrücklich gesetzter Wert hat
+dort Vorrang.
+
 **Aktivierungsregel:** Das Label erscheint nur, wenn `garanEnabled` an ist,
 das Produkt nicht deaktiviert wurde, die wirksame Dauer **> 2 Jahre** beträgt
 und Bedingungen (URL oder PDF) gepflegt sind. Unvollständige Daten

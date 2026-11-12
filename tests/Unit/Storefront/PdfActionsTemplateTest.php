@@ -7,12 +7,14 @@ namespace Hug\EuLabel\Tests\Unit\Storefront;
 use PHPUnit\Framework\TestCase;
 use Shopware\Storefront\Framework\Twig\IconExtension;
 use Twig\Environment;
+use Twig\Extension\AbstractExtension;
 use Twig\Loader\FilesystemLoader;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
 use Twig\Node\TextNode;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
+use Twig\TokenParser\TokenParserInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
@@ -149,7 +151,25 @@ final class PdfActionsTemplateTest extends TestCase
         $loader = new FilesystemLoader(\dirname(__DIR__, 3) . '/src/Resources/views');
 
         $twig = new Environment($loader);
-        $twig->addTokenParser($this->createIconTokenParser());
+        // Stubs als eigene Extension registrieren, nicht per addTokenParser():
+        // Twig benennt kompilierte Template-Klassen nach Template-Pfad und den
+        // Klassennamen der Extensions, per addTokenParser() registrierte Parser
+        // fließen dort nicht ein. Rendern zwei Tests dasselbe Template mit
+        // verschiedenen Stubs, gewinnt sonst prozessweit, wer zuerst kompiliert.
+        // Die anonyme Klasse trägt Datei und Zeile im Namen und trennt sie.
+        $twig->addExtension(new class([$this->createIconTokenParser()]) extends AbstractExtension {
+            /**
+             * @param list<TokenParserInterface> $stubParsers
+             */
+            public function __construct(private readonly array $stubParsers)
+            {
+            }
+
+            public function getTokenParsers(): array
+            {
+                return $this->stubParsers;
+            }
+        });
         $twig->addFunction(new TwigFunction('config', fn (string $key): mixed => $this->config[$key] ?? null));
         $twig->addFilter(new TwigFilter('trans', static fn (?string $key): string => 'SNIPPET[' . $key . ']'));
         $twig->addFilter(new TwigFilter('sw_sanitize', static fn (?string $value): ?string => $value, ['is_safe' => ['html']]));
